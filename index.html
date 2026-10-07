@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>腕時計せどりナビ - ジャンク復活判定 × 販路ルート比較（ヤフオク・メルカリ・セカスト・eBay）</title>
+<style>
+  :root {
+    --bg:#12141a; --panel:#1b1f29; --panel2:#232936; --border:#323a4b;
+    --text:#eef1f6; --sub:#8e99ad; --accent:#d9a847; --accent2:#2fc38a;
+    --warn:#f0b42f; --bad:#f0564f; --info:#4f8ef7; --radius:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;font-size:14px}
+  header{padding:14px 18px 0}
+  h1{font-size:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  h1 .badge{font-size:11px;background:var(--accent);color:#1b1500;padding:2px 8px;border-radius:20px}
+  .sub{font-size:12px;color:var(--sub);margin-top:4px}
+  nav{display:flex;gap:4px;margin-top:12px;border-bottom:2px solid var(--border);flex-wrap:wrap}
+  nav button{background:none;border:none;color:var(--sub);padding:10px 12px;font-size:14px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+  nav button.on{color:var(--text);border-color:var(--accent);font-weight:bold}
+  main{padding:16px 18px 60px;max-width:1320px;margin:0 auto}
+  section{display:none} section.on{display:block}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px}
+  .card h2{font-size:15px;margin-bottom:10px}
+  .card h3{font-size:14px;margin:12px 0 6px;color:var(--accent)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:11px;color:var(--sub)}
+  input,select,textarea{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:14px}
+  input:focus,select:focus,textarea:focus{outline:1px solid var(--accent)}
+  input[type=number]{width:120px}
+  button.btn{background:var(--accent);color:#1b1500;border:none;border-radius:6px;padding:9px 16px;font-size:14px;cursor:pointer;font-weight:bold}
+  button.btn:hover{filter:brightness(1.1)}
+  button.btn.green{background:var(--accent2);color:#06281b}
+  button.btn.ghost{background:var(--panel2);border:1px solid var(--border);color:var(--text);font-weight:normal}
+  button.btn.small{padding:4px 10px;font-size:12px}
+  button.btn.danger{background:var(--bad);color:#fff}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+  .stat{background:var(--panel2);border-radius:8px;padding:10px;text-align:center}
+  .stat .v{font-size:20px;font-weight:bold;margin-top:2px}
+  .stat .l{font-size:11px;color:var(--sub)}
+  .links{display:flex;gap:6px;flex-wrap:wrap}
+  .links a{background:var(--panel2);border:1px solid var(--border);color:var(--text);text-decoration:none;padding:5px 10px;border-radius:6px;font-size:12px}
+  .links a:hover{border-color:var(--accent)}
+  .links a.ya{border-color:#7a2a2e} .links a.me{border-color:#8a2a2a} .links a.eb{border-color:#2a4a8a} .links a.st{border-color:#2a7a4a} .links a.gd{border-color:#6a5a2a}
+  .tbl{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{border-bottom:1px solid var(--border);padding:7px 8px;text-align:left;vertical-align:top}
+  th{color:var(--sub);font-weight:normal;font-size:12px;white-space:nowrap;position:sticky;top:0;background:var(--panel)}
+  tr.item{cursor:pointer} tr.item:hover{background:var(--panel2)}
+  .brand{font-size:11px;color:var(--sub)} .name{font-weight:bold}
+  .price{white-space:nowrap;font-variant-numeric:tabular-nums}
+  .muted{color:var(--sub);font-size:12px}
+  .chip{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;white-space:nowrap;border:1px solid var(--border);background:var(--panel2)}
+  .chip.QZ,.chip.DG{border-color:#2f7a5a;color:#7fe0b0} .chip.SOL,.chip.RS{border-color:#8a7a2a;color:#f0d070}
+  .chip.KIN{border-color:#8a5a2a;color:#f0a870} .chip.AT,.chip.HW,.chip.SPR{border-color:#7a2a2e;color:#f09090} .chip.SM{border-color:#2a4a8a;color:#90b8ff}
+  .chip.real{border-color:var(--accent2);color:var(--accent2)}
+  .ok{color:var(--accent2)} .ng{color:var(--bad)} .wn{color:var(--warn)}
+  .star{color:var(--accent);letter-spacing:-1px} .star .off{color:#3a4152}
+  .note{background:var(--panel2);border-left:3px solid var(--accent);padding:10px 12px;border-radius:6px;font-size:13px;line-height:1.7}
+  .hint{font-size:12px;color:var(--sub);line-height:1.6}
+  .cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .pf{background:var(--panel2);border-radius:8px;padding:12px;line-height:1.7}
+  .pf .t{font-weight:bold;margin-bottom:4px}
+  .list{padding-left:18px;line-height:1.7}
+  .guide p,.guide li{line-height:1.7}
+  .guide ul{padding-left:20px;margin:6px 0}
+  .bm{display:inline-block;background:var(--panel2);border:1px dashed var(--accent);color:var(--accent);padding:8px 12px;border-radius:6px;text-decoration:none;font-size:13px;margin:4px 6px 4px 0;cursor:grab}
+  .reason{display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-bottom:1px dashed var(--border);font-size:13px}
+  .reason .d{min-width:44px;text-align:right;font-weight:bold;font-variant-numeric:tabular-nums}
+  .gauge{height:14px;background:#2a3040;border-radius:7px;overflow:hidden;margin:6px 0}
+  .gauge div{height:100%;background:linear-gradient(90deg,var(--bad),var(--warn),var(--accent2))}
+  .mx td.c{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mx td.c.best{outline:2px solid var(--accent);border-radius:4px}
+  #modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;overflow:auto;padding:30px 12px}
+  #modal .box{background:var(--panel);border:1px solid var(--border);border-radius:12px;max-width:1000px;margin:0 auto;padding:18px}
+  #modal .x{float:right;background:none;border:none;color:var(--sub);font-size:20px;cursor:pointer}
+  @media(max-width:700px){ main{padding:12px 10px 60px} th,td{padding:6px 5px;font-size:12px} input[type=number]{width:100px} }
+</style>
+</head>
+<body>
+<header>
+  <h1>⌚ 腕時計せどりナビ <span class="badge">ジャンク復活 × 販路ルート</span></h1>
+  <div class="sub">「電池交換すれば動く」ジャンクの見極めと、ヤフオク／メルカリ／セカスト／ハードオフ／eBay の仕入れ→販売ルートで差額が取れる組み合わせを判定します。相場は目安、実データは取り込みで上書き。</div>
+  <nav>
+    <button data-tab="list" class="on">📋 モデル相場・ルート</button>
+    <button data-tab="junk">🔋 ジャンク判定</button>
+    <button data-tab="route">🔀 ルート計算</button>
+    <button data-tab="import">📥 実データ取り込み</button>
+    <button data-tab="cand">📝 仕入れ候補</button>
+    <button data-tab="set">⚙ 設定</button>
+    <button data-tab="guide">📖 ガイド</button>
+  </nav>
+</header>
+<main>
+
+<!-- ========== モデル一覧 ========== -->
+<section id="tab-list" class="on">
+  <div class="card">
+    <div class="row">
+      <div class="field"><label>キーワード</label><input id="f_q" placeholder="DW-5600 / アテッサ / Tag Heuer" style="width:220px"></div>
+      <div class="field"><label>カテゴリ</label><select id="f_cat"><option value="">すべて</option></select></div>
+      <div class="field"><label>ムーブメント</label><select id="f_mv"><option value="">すべて</option></select></div>
+      <div class="field"><label>ジャンク狙い目★以上</label><select id="f_js"><option value="0">指定なし</option><option value="3">★3以上（電池・充電で復活しやすい）</option><option value="4">★4以上</option><option value="5">★5のみ</option></select></div>
+      <div class="field"><label>並び順</label><select id="f_sort"><option value="jroi">ジャンク期待ROI（期待利益÷仕入）が高い順</option><option value="jev">ジャンク期待利益が大きい順</option><option value="diff">差額利益（動作品）が大きい順</option><option value="roi">差額ROIが高い順</option><option value="d">需要★順</option><option value="price">相場が安い順</option><option value="brand">ブランド順</option></select></div>
+      <label class="muted" style="display:flex;align-items:center;gap:4px;padding-bottom:8px"><input type="checkbox" id="f_pos"> 差額利益がプラスのみ</label>
+    </div>
+    <div class="hint" style="margin-top:8px">相場帯はAIの知識ベースによる目安（2025〜26年の感覚）。<b>差額利益</b>＝動作品を仕入れ元の安値（相場の下位25%点）で拾い、販売先の中央値で売った場合の手取り差。<b>ジャンク期待利益</b>＝ジャンク相場で仕入れ、復活確率×（復活時の利益）＋失敗確率×（本格修理 or ジャンク再販）で計算。緑の「実測」は取り込み済みの実データです。</div>
+  </div>
+  <div class="card">
+    <div class="stats" id="list_stats"></div>
+  </div>
+  <div class="card tbl"><table id="list_tbl"><thead><tr>
+    <th>モデル</th><th>ムーブ / 電池</th><th>ジャンク狙い目</th><th>ジャンク相場</th><th>メルカリ売切</th><th>ヤフオク落札</th><th>セカスト店頭</th><th>eBay Sold</th><th>最良の差額ルート</th><th>差額利益</th><th>ジャンク期待利益</th>
+  </tr></thead><tbody></tbody></table></div>
+</section>
+
+<!-- ========== ジャンク判定 ========== -->
+<section id="tab-junk">
+  <div class="card">
+    <h2>出品ページの文言から「電池交換で動く可能性」を判定</h2>
+    <div class="note">ヤフオク・メルカリ・ハードオフの商品説明をそのまま貼り付けてください。「電池切れ」「長期保管」はプラス、「電池交換しても動かない」「水没」「液漏れ」「針外れ」「リューズ欠損」は大きくマイナスにして復活確率を出します。モデルが特定できれば相場から期待利益と仕入上限も計算します。</div>
+    <div class="row" style="margin-top:10px">
+      <div class="field" style="flex:1;min-width:280px"><label>タイトル＋商品説明（貼り付け）</label><textarea id="j_text" rows="6" style="width:100%" placeholder="例：SEIKO セイコー 8F32 パーペチュアルカレンダー 電池切れのため動作未確認 ジャンク扱い 長期自宅保管品 ノークレームノーリターン"></textarea></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="field"><label>仕入れ元</label><select id="j_src"></select></div>
+      <div class="field"><label>価格（円・落札/購入見込み）</label><input type="number" id="j_price" value="3000"></div>
+      <div class="field"><label>仕入れ送料（円）</label><input type="number" id="j_ship" value="600"></div>
+      <div class="field"><label>モデル（自動判定 or 選択）</label><select id="j_model" style="max-width:360px"><option value="">（未特定・ムーブメントだけで判定）</option></select></div>
+      <div class="field"><label>ムーブメント</label><select id="j_mv"></select></div>
+      <div class="field"><label>想定売値（円・空ならモデル相場）</label><input type="number" id="j_sale" placeholder="自動"></div>
+      <button class="btn ghost" id="j_detect">モデル自動判定</button>
+      <button class="btn" id="j_go">判定する</button>
+    </div>
+    <div id="j_out" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<!-- ========== ルート計算 ========== -->
+<section id="tab-route">
+  <div class="card">
+    <h2>仕入れ元 × 販売先 の手取り・利益（動作品の差額せどり）</h2>
+    <div class="row">
+      <div class="field"><label>モデル（選ぶと相場を自動入力）</label><select id="r_model" style="max-width:360px"><option value="">（手入力）</option></select></div>
+      <div class="field"><label>仕入れ元</label><select id="r_src"></select></div>
+      <div class="field"><label>仕入値（円）</label><input type="number" id="r_cost" value="10000"></div>
+      <div class="field"><label>仕入れ送料（円）</label><input type="number" id="r_bship" value="600"></div>
+      <div class="field"><label>電池交換・整備費（円）</label><input type="number" id="r_fix" value="300"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="field"><label>メルカリ想定売値</label><input type="number" id="r_m" value="18000"></div>
+      <div class="field"><label>ヤフオク想定落札</label><input type="number" id="r_y" value="16000"></div>
+      <div class="field"><label>Yahoo!フリマ・ラクマ想定</label><input type="number" id="r_f" value="17000"></div>
+      <div class="field"><label>eBay想定（USD）</label><input type="number" id="r_e" value="150"></div>
+      <div class="field"><label>買取店 買取額（円）</label><input type="number" id="r_k" value="9000"></div>
+      <button class="btn" id="r_go">計算</button>
+    </div>
+    <div id="r_out" style="margin-top:14px"></div>
+  </div>
+  <div class="card">
+    <h2>モデル別 ルート利益マップ（仕入れ元 × 販売先）</h2>
+    <div class="row"><div class="field"><label>モデル</label><select id="r_map_model" style="max-width:420px"></select></div></div>
+    <div id="r_map" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<!-- ========== 実データ取り込み ========== -->
+<section id="tab-import">
+  <div class="card">
+    <h2>① 相場チェックリンク生成</h2>
+    <div class="row">
+      <div class="field"><label>日本語キーワード（ヤフオク・メルカリ・セカスト）</label><input id="sq_jp" placeholder="セイコー 8F32" style="width:260px"></div>
+      <div class="field"><label>英語キーワード（eBay）</label><input id="sq_en" placeholder="Seiko 8F32 perpetual" style="width:260px"></div>
+      <button class="btn" id="sq_go">リンク生成</button>
+    </div>
+    <div id="sq_links" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <h2>② 実データ取り込み（ブックマークレット）</h2>
+    <div class="note">下のボタンをブラウザのブックマークバーへドラッグして登録します。各サイトの検索結果ページ（ヤフオク落札相場／メルカリ売り切れ／eBay Sold／Yahoo!フリマ／セカストオンライン）を開いた状態でクリックすると、表示中の件数・価格がクリップボードにコピーされます。下の欄に貼り付けて「解析」→ モデルに紐づけて保存すると、一覧・ルート・ジャンク判定が実測中央値で再計算されます。<br>※ サイトの構造が変わると取れなくなることがあります（取得件数0）。</div>
+    <div style="margin:10px 0">
+      <a class="bm" id="bm_yahoo" href="#">📕 ヤフオク落札 取り込み</a>
+      <a class="bm" id="bm_mercari" href="#">📕 メルカリ売切 取り込み</a>
+      <a class="bm" id="bm_ebay" href="#">📕 eBay Sold 取り込み</a>
+      <a class="bm" id="bm_yfm" href="#">📕 Yahoo!フリマ 取り込み</a>
+      <a class="bm" id="bm_second" href="#">📕 セカストオンライン 取り込み</a>
+    </div>
+    <div class="row">
+      <div class="field" style="flex:1"><label>貼り付け欄（JSON）</label><textarea id="paste" rows="4" style="width:100%" placeholder='{"site":"yahoo", ...}'></textarea></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="field"><label>紐づけるモデル</label><select id="paste_item" style="max-width:400px"><option value="">（紐づけない）</option></select></div>
+      <button class="btn" id="paste_go">解析</button>
+      <button class="btn green" id="paste_save" disabled>このモデルに保存</button>
+    </div>
+    <div id="paste_out" style="margin-top:12px"></div>
+  </div>
+  <div class="card">
+    <h2>③ 保存済みの実測データ</h2>
+    <div id="real_list"></div>
+  </div>
+</section>
+
+<!-- ========== 仕入れ候補 ========== -->
+<section id="tab-cand">
+  <div class="card">
+    <h2>仕入れ候補リスト</h2>
+    <div class="hint">ジャンク判定タブの「候補に保存」か、下の手入力で追加。ステータスを更新して管理し、CSVで書き出せます（保存先はこのブラウザのみ）。</div>
+    <div class="row" style="margin-top:10px">
+      <div class="field" style="flex:1;min-width:200px"><label>タイトル</label><input id="c_title" style="width:100%"></div>
+      <div class="field"><label>URL</label><input id="c_url" style="width:220px" placeholder="https://"></div>
+      <div class="field"><label>仕入れ元</label><select id="c_src"></select></div>
+      <div class="field"><label>仕入値（円）</label><input type="number" id="c_price" value="0"></div>
+      <div class="field"><label>モデル</label><select id="c_model" style="max-width:300px"><option value="">（未特定）</option></select></div>
+      <button class="btn" id="c_add">追加</button>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn ghost small" id="c_csv">CSV書き出し</button>
+      <button class="btn ghost small" id="c_clear_sold">売却済みを一括削除</button>
+      <span class="muted" id="c_sum"></span>
+    </div>
+    <div class="tbl" style="margin-top:10px"><table id="cand_tbl"><thead><tr><th>日付</th><th>タイトル</th><th>仕入れ元</th><th>仕入値</th><th>復活%</th><th>想定コスト</th><th>最良販売先 / 手取り</th><th>期待利益</th><th>ステータス</th><th>実売値</th><th></th></tr></thead><tbody></tbody></table></div>
+  </div>
+</section>
+
+<!-- ========== 設定 ========== -->
+<section id="tab-set">
+  <div class="card">
+    <h2>手数料・送料・為替</h2>
+    <h3>販売先の手数料（%）と発送送料（円）</h3>
+    <div class="row">
+      <div class="field"><label>メルカリ 手数料%</label><input type="number" id="s_fMer"></div>
+      <div class="field"><label>メルカリ 送料</label><input type="number" id="s_sMer"></div>
+      <div class="field"><label>ヤフオク 手数料%</label><input type="number" id="s_fYah"></div>
+      <div class="field"><label>ヤフオク 送料</label><input type="number" id="s_sYah"></div>
+      <div class="field"><label>Yahoo!フリマ 手数料%</label><input type="number" id="s_fYfm"></div>
+      <div class="field"><label>Yahoo!フリマ 送料</label><input type="number" id="s_sYfm"></div>
+      <div class="field"><label>ラクマ 手数料%</label><input type="number" id="s_fRak"></div>
+      <div class="field"><label>ラクマ 送料</label><input type="number" id="s_sRak"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="field"><label>eBay 手数料%</label><input type="number" id="s_fEb"></div>
+      <div class="field"><label>eBay 関税・返品リスク引当%</label><input type="number" id="s_eTariff"></div>
+      <div class="field"><label>eBay 国際送料（円）</label><input type="number" id="s_sEb"></div>
+      <div class="field"><label>為替（円/USD）</label><input type="number" id="s_rate"></div>
+      <div class="field"><label>買取店 買取率（相場比%）</label><input type="number" id="s_kaitori"></div>
+      <div class="field"><label>Yahoo!フリマ・ラクマ 相場割引%</label><input type="number" id="s_yfmDisc"></div>
+      <div class="field"><label>梱包材（円）</label><input type="number" id="s_pack"></div>
+    </div>
+    <h3>仕入れ時の送料（円）</h3>
+    <div class="row">
+      <div class="field"><label>ヤフオク</label><input type="number" id="s_bYah"></div>
+      <div class="field"><label>メルカリ</label><input type="number" id="s_bMer"></div>
+      <div class="field"><label>Yahoo!フリマ</label><input type="number" id="s_bYfm"></div>
+      <div class="field"><label>ラクマ</label><input type="number" id="s_bRak"></div>
+      <div class="field"><label>セカスト・ハードオフ</label><input type="number" id="s_bSec"></div>
+      <div class="field"><label>eBay輸入（送料＋関税）</label><input type="number" id="s_bEbImp"></div>
+      <div class="field"><label>ジャンク仕入れ送料（平均）</label><input type="number" id="s_bJunk"></div>
+    </div>
+    <h3>復活・修理コストの目安（円）</h3>
+    <div class="row" id="s_fix"></div>
+    <h3>目標利益</h3>
+    <div class="row">
+      <div class="field"><label>目標利益率（手取り比%）</label><input type="number" id="s_tgtPct"></div>
+      <div class="field"><label>最低利益額（円）</label><input type="number" id="s_tgtMin"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="s_save">保存して再計算</button>
+      <button class="btn ghost" id="s_reset">初期値に戻す</button>
+      <button class="btn danger" id="s_wipe">実測データ・候補をすべて削除</button>
+    </div>
+    <div class="hint" style="margin-top:10px">手数料の初期値：メルカリ10%・ヤフオク10%（LYPプレミアムなら8.8%）・Yahoo!フリマ5%・ラクマ10%・eBay15%＋引当15%。送料は腕時計1本（ネコポス/ゆうパケット想定）。変更はこのブラウザに保存されます。</div>
+  </div>
+</section>
+
+<!-- ========== ガイド ========== -->
+<section id="tab-guide" class="guide">
+  <div class="card">
+    <h2>狙い目の考え方（ムーブメント別）</h2>
+    <div class="tbl"><table>
+      <tr><th>ムーブ</th><th>ジャンク狙い目</th><th>不動の主な原因</th><th>復活させる手順・費用</th></tr>
+      <tr><td><span class="chip QZ">クォーツ</span></td><td><span class="star">★★★★★</span></td><td>電池切れ（大半）／液漏れ／回路劣化</td><td>裏蓋を開けて電池交換（100〜400円）。交換しても動かなければムーブ交換（Miyota・SII等 1,500〜4,000円）。</td></tr>
+      <tr><td><span class="chip DG">デジタル</span></td><td><span class="star">★★★★<span class="off">★</span></span></td><td>電池切れ／液漏れ／液晶劣化</td><td>CR2016等に交換後、AC端子と電池＋をピンセットで2秒ショート（リセット）。液晶が薄い・欠けは直らない。</td></tr>
+      <tr><td><span class="chip SOL">ソーラー・電波ソーラー</span></td><td><span class="star">★★★<span class="off">★★</span></span></td><td>放電（暗所保管）／二次電池劣化</td><td>まず窓際で2〜3日充電（直射日光の高温は避ける）。2秒運針は充電警告。充電しても止まるなら二次電池交換（部品1,000〜2,000円＋手間）。</td></tr>
+      <tr><td><span class="chip KIN">キネティック</span></td><td><span class="star">★★<span class="off">★★★</span></span></td><td>キャパシタ（蓄電池）劣化</td><td>セイコー純正キャパシタ（3023-24T等）に交換。部品1,500〜3,000円。交換後は振って充電。</td></tr>
+      <tr><td><span class="chip AT">自動巻・手巻</span></td><td><span class="star">★<span class="off">★★★★</span></span></td><td>油切れ／ゼンマイ切れ／部品破損</td><td>電池では直らない。OH 1.5〜4万円。利益が出るのは高額ヴィンテージのみ。「振ると動くがすぐ止まる」は油切れの典型。</td></tr>
+      <tr><td><span class="chip SM">スマートウォッチ</span></td><td><span class="star">★★<span class="off">★★★</span></span></td><td>バッテリー劣化／アクティベーションロック</td><td>Apple Watch はロック解除済みが絶対条件。最大容量80%未満は減額。Garmin・Suunto Core（CR2032）は扱いやすい。</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>電池型番 早見表（SR＝酸化銀 / CR＝リチウム）</h2>
+    <div class="tbl"><table>
+      <tr><th>型番</th><th>別名</th><th>主な用途</th></tr>
+      <tr><td>SR626SW</td><td>377</td><td>レディース・薄型3針（セイコー・シチズン・ファッション系）で最多</td></tr>
+      <tr><td>SR621SW</td><td>364</td><td>小型レディース、Miyota GL20（Daniel Wellington 等）</td></tr>
+      <tr><td>SR920SW</td><td>371</td><td>メンズ3針・ETA F06系（Tissot PRX クォーツ等）・セイコー 7A28</td></tr>
+      <tr><td>SR927SW / SR927W</td><td>395 / 399</td><td>クロノグラフ・G-SHOCK アナデジ（GA-100 等）・グランドセイコー9F</td></tr>
+      <tr><td>SR916SW</td><td>373</td><td>薄型ドレス（クレドール等）</td></tr>
+      <tr><td>SR936SW</td><td>394</td><td>Swatch スタンダード</td></tr>
+      <tr><td>SR43SW / SR44SW</td><td>386 / 357</td><td>70〜80年代セイコークォーツ（7548・ツインクォーツ）</td></tr>
+      <tr><td>CR2016</td><td>—</td><td>G-SHOCK 5600/6900系・チープカシオ・Luminox</td></tr>
+      <tr><td>CR2025 / CR1616</td><td>—</td><td>G-SHOCK 一部・Baby-G・データバンク</td></tr>
+      <tr><td>CR2412</td><td>—</td><td>セイコー 8F32/8F56 パーペチュアル（10年電池）</td></tr>
+      <tr><td>CTL1616 / CTL920 / MT920 / 295-xx</td><td>二次電池</td><td>タフソーラー・オシアナス・セイコーソーラー・エコドライブ。普通の電池を入れてはいけない。</td></tr>
+    </table></div>
+    <p class="hint" style="margin-top:8px">電池は「SW（低消費・無音）」と「W（高消費・アラーム/ライト付き）」で使い分け。SR626SW は100均、まとめ買いはAmazonで10個300〜500円。裏蓋の内側か電池の刻印で型番を確認。</p>
+  </div>
+  <div class="card">
+    <h2>裏蓋の種類と工具</h2>
+    <ul>
+      <li><b>スクリューバック</b>（切り欠きあり）：3点支持オープナー（1,500〜3,000円）または ボールオープナー（ゴムボール・数百円）。ダイバー・G-STEEL・GW-5000 等。</li>
+      <li><b>こじ開け（スナップ）</b>：こじ開けナイフを隙間に差し込んで持ち上げる。ドレス・ファッション・ヴィンテージに多い。傷を付けないよう養生。</li>
+      <li><b>ネジ止め</b>：精密ドライバー（#000/#00・JIS）。G-SHOCK 四隅ネジ・デジタル。ネジ山をなめない。</li>
+      <li><b>特殊</b>：Swatch は裏の電池蓋をコインで回すだけ。一体型ケース（Marinemaster・Apple Watch）は素人は開けない。</li>
+      <li>共通：ピンセット（非磁性）・ブロワー・セーム革・パッキン用シリコングリス・裏蓋閉め器（スクリュー／プレス式）。電池交換後は防水性が落ちるので「非防水扱い」で出品。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>ルート別の特徴</h2>
+    <div class="tbl"><table>
+      <tr><th>ルート</th><th>何が取れるか</th><th>注意</th></tr>
+      <tr><td>ヤフオク → メルカリ</td><td>「電池切れ・不動・動作未確認・まとめ売り」が安い。電池交換して動作品としてメルカリで即決売り。</td><td>落札送料・入札競争。1円スタートのまとめ売りは終了5分前に動く。</td></tr>
+      <tr><td>セカスト / ハードオフ → メルカリ・ヤフオク</td><td>店頭ジャンク箱（青箱）・値付けが型番を見ていない店舗。「電池切れ」札は宝。</td><td>店舗ごとに値付けが違う。巡回コストを時給換算。</td></tr>
+      <tr><td>メルカリ → ヤフオク</td><td>ヴィンテージ・コレクター物（KS・GS・6139・DW-5600C・80年代デジタル）は競りで上がる。</td><td>メルカリは値下げ交渉前提。ヤフオクは写真点数・説明の質で差。</td></tr>
+      <tr><td>国内 → eBay</td><td>セイコー・シチズン・カシオのヴィンテージ、G-SHOCK 日本限定、グランドセイコー、キングセイコー。</td><td>関税・返品・偽物疑いの返金。小型軽量で送料は有利。</td></tr>
+      <tr><td>eBay → 国内</td><td>Timex・Bulova・Hamilton 米国モデル、スイスヴィンテージの割安品。</td><td>送料＋関税で3,000円〜。真贋リスク。</td></tr>
+      <tr><td>どこでも → 買取店</td><td>高級ブランドの即現金化。相場の50〜70%。</td><td>利益は薄い。ロレックス等は買取店の方が手数料・リスク込みで有利なこともある。</td></tr>
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>真贋・法律・出品のルール</h2>
+    <ul>
+      <li><b>偽物が多いモデル</b>：ロレックス・パネライ・フランクミュラー・カルティエ・G-SHOCK（GA-2100/フロッグマン/GMW-B5000）・SKX007・ムーンスウォッチ・Daniel Wellington。「安すぎるジャンク」は疑う。裏蓋刻印・シリアル・重量・夜光・ブレスの質感で確認。</li>
+      <li><b>古物商許可</b>：継続的に中古を仕入れて売るなら警察署で古物商許可（手数料19,000円）。古物台帳に相手の本人確認を記録（1万円以上）。</li>
+      <li><b>出品表記</b>：電池交換した日・動作確認した時間（「24時間以上正常動作」）・防水非保証・日差を書く。「電池切れだったので交換済み」は信頼につながる。</li>
+      <li><b>メルカリ規約</b>：偽物・盗難品は即アカウント停止。ブランド品はシリアル写真を載せる。</li>
+      <li><b>金無垢・K18</b>：刻印（K18・750）があれば地金価値が下限。レディース金無垢は時計として売るより買取店の方が高い場合も。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>出品文テンプレ（電池交換して復活した場合）</h2>
+    <div class="note" id="tpl" style="white-space:pre-wrap">【商品】ブランド名 モデル名 型番
+【状態】電池切れで保管されていたものを、20XX年X月に新品電池（型番）へ交換し、48時間以上の正常動作を確認しました。
+【付属品】本体のみ（箱・保証書なし）
+【傷・使用感】ガラスに小傷、ケースにスレあり（写真参照）
+【注意】電池交換に伴い防水性能は保証しません。中古品のため神経質な方はご遠慮ください。
+【発送】ネコポス（追跡あり）で発送します。</div>
+    <button class="btn ghost small" style="margin-top:8px" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('tpl').innerText).then(()=>alert('コピーしました'))">テンプレをコピー</button>
+  </div>
+  <div class="card">
+    <h2>免責</h2>
+    <p class="hint">相場・電池型番・修理費は目安です。実際の相場はリンク先と取り込み機能で確認してください。分解・電池交換は自己責任で行い、高額品は専門店に依頼してください。本ツールは特定の商品の購入・販売を推奨するものではありません。</p>
+  </div>
+</section>
+</main>
+
+<div id="modal"><div class="box"><button class="x" id="modal_x">✕</button><div id="modal_body"></div></div></div>
+
+<script src="data.js"></script>
+<script>
+// ---------- 設定 ----------
+const DEF = { rate:150, fMer:10, fYah:10, fYfm:5, fRak:10, fEb:15, eTariff:15, kaitori:60, yfmDisc:5,
+  sMer:210, sYah:230, sYfm:200, sRak:210, sEb:2200,
+  bYah:600, bMer:0, bYfm:0, bRak:0, bSec:0, bEbImp:3000, bJunk:400,
+  pack:150, tgtPct:20, tgtMin:1500 };
+Object.keys(FIXCOST).forEach(k => { DEF['c_' + k] = FIXCOST[k][0]; DEF['b_' + k] = FIXCOST[k][2]; });
+const LS = (k, v) => { try { if (v === undefined) return JSON.parse(localStorage.getItem('ws_' + k)); localStorage.setItem('ws_' + k, JSON.stringify(v)); } catch (e) { return null; } };
+let SET = Object.assign({}, DEF, LS('set') || {});
+let REAL = LS('real') || {};   // itemId -> {yahoo:{...}, mercari:{...}, ebay:{...}, yfm:{...}, second:{...}}
+let CAND = LS('cand') || [];   // 仕入れ候補
+ITEMS.forEach((it, i) => it.id = 'w' + i);
+const BYID = Object.fromEntries(ITEMS.map(it => [it.id, it]));
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const yen = n => (n < 0 ? '−' : '') + '¥' + Math.abs(Math.round(n)).toLocaleString();
+const usd = n => '$' + Math.round(n).toLocaleString();
+const pct = n => Math.round(n) + '%';
+const stars = n => '<span class="star">' + '★'.repeat(n) + '<span class="off">' + '★'.repeat(5 - n) + '</span></span>';
+const mvChip = mv => `<span class="chip ${mv}">${MV[mv][0]}</span>`;
+const enc = encodeURIComponent;
+
+// ---------- 仕入れ元・販売先 ----------
+const SRC = [
+  { id: 'yahoo', n: 'ヤフオク', band: 'y', ship: 'bYah' },
+  { id: 'mercari', n: 'メルカリ', band: 'm', ship: 'bMer' },
+  { id: 'yfm', n: 'Yahoo!フリマ', band: 'm', ship: 'bYfm', disc: true },
+  { id: 'rakuma', n: 'ラクマ', band: 'm', ship: 'bRak', disc: true },
+  { id: 'second', n: 'セカスト・ハードオフ等 店頭', band: 's', ship: 'bSec' },
+  { id: 'ebay', n: 'eBay（輸入）', band: 'e', ship: 'bEbImp' },
+];
+const DST = [
+  { id: 'mercari', n: 'メルカリ', band: 'm', fee: 'fMer', ship: 'sMer' },
+  { id: 'yahoo', n: 'ヤフオク', band: 'y', fee: 'fYah', ship: 'sYah' },
+  { id: 'yfm', n: 'Yahoo!フリマ', band: 'm', fee: 'fYfm', ship: 'sYfm', disc: true },
+  { id: 'rakuma', n: 'ラクマ', band: 'm', fee: 'fRak', ship: 'sRak', disc: true },
+  { id: 'ebay', n: 'eBay', band: 'e', fee: 'fEb', extra: 'eTariff', ship: 'sEb' },
+  { id: 'kaitori', n: '買取店', band: 'k' },
+];
+const SRCN = Object.fromEntries(SRC.map(s => [s.id, s.n]));
+
+// ---------- 相場・計算 ----------
+function bandMid(it, b) {
+  const r = REAL[it.id] || {}; const key = { y: 'yahoo', m: 'mercari', e: 'ebay', s: 'second' }[b];
+  if (r[key]) return { v: r[key].median, real: true };
+  return { v: (it[b][0] + it[b][1]) / 2, real: false };
+}
+function grossJPY(it, d) {
+  if (d.id === 'ebay') { const b = bandMid(it, 'e'); return { v: b.v * SET.rate, real: b.real }; }
+  if (d.id === 'yfm' || d.id === 'rakuma') {
+    const r = REAL[it.id] || {}; if (d.id === 'yfm' && r.yfm) return { v: r.yfm.median, real: true };
+    const b = bandMid(it, 'm'); return { v: b.v * (1 - SET.yfmDisc / 100), real: b.real };
+  }
+  if (d.id === 'kaitori') { const y = bandMid(it, 'y'), m = bandMid(it, 'm'); return { v: Math.max(y.v, m.v) * SET.kaitori / 100, real: y.real || m.real }; }
+  return bandMid(it, d.band);
+}
+function netOf(gross, d) { if (d.id === 'kaitori') return gross; return gross * (1 - (SET[d.fee] + (d.extra ? SET[d.extra] : 0)) / 100) - SET[d.ship] - SET.pack; }
+// 仕入れ側は「相場の下位25%点」（実測があれば p25）。せどりは安い出品を拾う前提
+function bandLow(it, b) {
+  const r = REAL[it.id] || {}; const key = { y: 'yahoo', m: 'mercari', e: 'ebay', s: 'second' }[b];
+  if (r[key]) return { v: r[key].p25 ?? r[key].median, real: true };
+  return { v: it[b][0] + (it[b][1] - it[b][0]) * 0.25, real: false };
+}
+function buyOf(it, s) {
+  let v; if (s.id === 'ebay') v = bandLow(it, 'e').v * SET.rate; else if (s.disc) v = bandLow(it, 'm').v * (1 - SET.yfmDisc / 100); else v = bandLow(it, s.band).v;
+  return v + SET[s.ship];
+}
+function routes(it) {
+  const dsts = DST.map(d => { const g = grossJPY(it, d); return { d, gross: g.v, real: g.real, net: netOf(g.v, d) }; });
+  const rows = SRC.map(s => { const buy = buyOf(it, s); return { s, buy, cells: dsts.map(x => ({ d: x.d, net: x.net, profit: s.id === x.d.id ? null : x.net - buy })) }; });
+  let best = null;
+  rows.forEach(r => r.cells.forEach(c => { if (c.profit != null && (!best || c.profit > best.profit)) best = { src: r.s, dst: c.d, profit: c.profit, buy: r.buy, net: c.net }; }));
+  const bestDst = dsts.reduce((a, b) => b.net > a.net ? b : a);
+  return { dsts, rows, best, bestDst };
+}
+// ジャンク期待値： p=復活確率, buy=仕入総額（送料込）, extra=追加修理費, saleMul=売値補正
+function junkEV(it, opt = {}) {
+  const mv = opt.mv || it.mv; const p = opt.p ?? MV[mv][2];
+  const buy = opt.buy ?? ((it.j[0] + it.j[1]) / 2 + SET.bJunk);
+  const cheap = SET['c_' + mv] + (opt.extra || 0), big = SET['b_' + mv];
+  const R = routes(it); const bestNet = (opt.saleNet ?? R.bestDst.net) * (opt.saleMul || 1);
+  const junkNet = (it.j[0] + it.j[1]) / 2 * (1 - SET.fMer / 100) - SET.sMer - SET.pack;
+  const okP = bestNet - buy - cheap;
+  const repairP = bestNet - buy - cheap - big, resellP = junkNet - buy - cheap;
+  const failP = Math.max(repairP, resellP);
+  const ev = p * okP + (1 - p) * failP;
+  const target = Math.max(SET.tgtMin, bestNet * SET.tgtPct / 100);
+  return { mv, p, buy, cheap, big, bestNet, bestDst: R.bestDst.d, junkNet, okP, failP, repairP, resellP, ev, maxBuy: ev + buy - target, target, failMode: repairP >= resellP ? 'repair' : 'resell' };
+}
+
+// ---------- リンク生成 ----------
+function links(kj, kw) {
+  const L = [];
+  L.push(['ya', 'ヤフオク 落札相場', `https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=${enc(kj)}&va=${enc(kj)}&exflg=1&b=1&n=50&s1=end&o1=d`]);
+  L.push(['ya', 'ヤフオク ジャンク出品中（安い順）', `https://auctions.yahoo.co.jp/search/search?p=${enc(kj + ' ジャンク')}&va=${enc(kj + ' ジャンク')}&s1=cbids&o1=a`]);
+  L.push(['ya', 'ヤフオク 出品中', `https://auctions.yahoo.co.jp/search/search?p=${enc(kj)}&va=${enc(kj)}`]);
+  L.push(['ya', 'aucfree 落札履歴', `https://aucfree.com/search?q=${enc(kj)}`]);
+  L.push(['me', 'メルカリ 売切', `https://jp.mercari.com/search?keyword=${enc(kj)}&status=sold_out`]);
+  L.push(['me', 'メルカリ ジャンク出品中（安い順）', `https://jp.mercari.com/search?keyword=${enc(kj + ' ジャンク')}&status=on_sale&sort=price&order=asc`]);
+  L.push(['me', 'メルカリ 出品中', `https://jp.mercari.com/search?keyword=${enc(kj)}&status=on_sale`]);
+  L.push(['me', 'Yahoo!フリマ', `https://paypayfleamarket.yahoo.co.jp/search/${enc(kj)}`]);
+  L.push(['me', 'ラクマ', `https://fril.jp/s?query=${enc(kj)}`]);
+  L.push(['st', 'セカストオンライン', `https://www.2ndstreet.jp/search?keyword=${enc(kj)}`]);
+  L.push(['st', 'ハードオフ ネットモール', `https://netmall.hardoff.co.jp/search/?q=${enc(kj)}`]);
+  L.push(['eb', 'eBay Sold', `https://www.ebay.com/sch/i.html?_nkw=${enc(kw)}&LH_Sold=1&LH_Complete=1&_sop=13`]);
+  L.push(['eb', 'eBay Sold（日本セラー）', `https://www.ebay.com/sch/i.html?_nkw=${enc(kw)}&LH_Sold=1&LH_Complete=1&LH_SALBN=1&_salic=104&_sop=13`]);
+  L.push(['eb', 'eBay 出品中', `https://www.ebay.com/sch/i.html?_nkw=${enc(kw)}&_sop=12`]);
+  L.push(['gd', '電池交換の方法（Google）', `https://www.google.com/search?q=${enc(kj + ' 電池交換 方法')}`]);
+  L.push(['gd', '電池交換の動画（YouTube）', `https://www.youtube.com/results?search_query=${enc(kj + ' 電池交換')}`]);
+  return `<div class="links">${L.map(l => `<a class="${l[0]}" href="${l[2]}" target="_blank" rel="noopener">${l[1]}</a>`).join('')}</div>`;
+}
+
+// ---------- 一覧 ----------
+function fillSelect(id, entries, first) {
+  const el = $(id); el.innerHTML = (first ? `<option value="">${first}</option>` : '') + entries.map(([v, t]) => `<option value="${v}">${esc(t)}</option>`).join('');
+}
+function modelOptions() { return ITEMS.map(it => [it.id, `${it.brand} ${it.name}`]); }
+function filtered() {
+  const q = $('#f_q').value.trim().toLowerCase(), cat = $('#f_cat').value, mv = $('#f_mv').value, js = +$('#f_js').value, pos = $('#f_pos').checked;
+  return ITEMS.map(it => ({ it, R: routes(it), J: junkEV(it) })).filter(({ it, R }) => {
+    if (cat && it.cat !== cat) return false; if (mv && it.mv !== mv) return false; if (js && MV[it.mv][3] < js) return false;
+    if (pos && (!R.best || R.best.profit <= 0)) return false;
+    if (q && !(it.brand + ' ' + it.name + ' ' + it.kw + ' ' + it.kj + ' ' + it.bat).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+function sorted(rows) {
+  const s = $('#f_sort').value;
+  const f = { jroi: r => -(r.J.ev / Math.max(1, r.J.buy + r.J.cheap)), jev: r => -r.J.ev, diff: r => -(r.R.best?.profit ?? -1e9), roi: r => -((r.R.best?.profit ?? -1e9) / Math.max(1, r.R.best?.buy ?? 1)), d: r => -r.it.d, price: r => (r.it.m[0] + r.it.m[1]) / 2, brand: r => r.it.brand + r.it.name }[s];
+  return rows.sort((a, b) => { const x = f(a), y = f(b); return x < y ? -1 : x > y ? 1 : 0; });
+}
+function band(it, b, unit) { const r = REAL[it.id] || {}; const key = { y: 'yahoo', m: 'mercari', e: 'ebay', s: 'second', j: '' }[b]; if (key && r[key]) return `<span class="chip real" title="実測 ${r[key].n}件">${unit(r[key].median)}</span>`; return `${unit(it[b][0])}〜${unit(it[b][1])}`; }
+function render() {
+  const rows = sorted(filtered());
+  const tb = $('#list_tbl tbody');
+  tb.innerHTML = rows.map(({ it, R, J }) => `<tr class="item" data-id="${it.id}">
+    <td><div class="brand">${esc(it.brand)} ・ ${esc(CATS[it.cat])}</div><div class="name">${esc(it.name)}</div><div class="muted">需要 ${stars(it.d)}</div></td>
+    <td>${mvChip(it.mv)}<div class="muted">${esc(it.bat)}</div><div class="muted">裏蓋: ${BACK[it.back]}</div></td>
+    <td>${stars(MV[it.mv][3])}<div class="muted">復活率目安 ${pct(MV[it.mv][2] * 100)}</div></td>
+    <td class="price">${band(it, 'j', yen)}</td>
+    <td class="price">${band(it, 'm', yen)}</td>
+    <td class="price">${band(it, 'y', yen)}</td>
+    <td class="price">${band(it, 's', yen)}</td>
+    <td class="price">${band(it, 'e', usd)}</td>
+    <td>${R.best ? `<div>${esc(R.best.src.n)} → <b>${esc(R.best.dst.n)}</b></div><div class="muted">仕入 ${yen(R.best.buy)} / 手取り ${yen(R.best.net)}</div>` : '—'}</td>
+    <td class="price ${R.best && R.best.profit > 0 ? 'ok' : 'ng'}"><b>${R.best ? yen(R.best.profit) : '—'}</b><div class="muted">ROI ${R.best ? pct(R.best.profit / Math.max(1, R.best.buy) * 100) : '—'}</div></td>
+    <td class="price ${J.ev > 0 ? 'ok' : 'ng'}"><b>${yen(J.ev)}</b><div class="muted">期待ROI ${pct(J.ev / Math.max(1, J.buy + J.cheap) * 100)} / </div><div class="muted">${esc(J.bestDst.n)}で売却 / 仕入上限 ${yen(J.maxBuy)}</div></td>
+  </tr>`).join('');
+  tb.querySelectorAll('tr.item').forEach(tr => tr.addEventListener('click', () => openDetail(tr.dataset.id)));
+  const posN = rows.filter(r => r.R.best && r.R.best.profit > 0).length, jN = rows.filter(r => r.J.ev > 0).length;
+  const realN = ITEMS.filter(it => REAL[it.id]).length;
+  $('#list_stats').innerHTML = `
+    <div class="stat"><div class="l">表示モデル</div><div class="v">${rows.length}</div></div>
+    <div class="stat"><div class="l">差額利益プラス</div><div class="v ok">${posN}</div></div>
+    <div class="stat"><div class="l">ジャンク期待利益プラス</div><div class="v ok">${jN}</div></div>
+    <div class="stat"><div class="l">実測データあり</div><div class="v">${realN}</div></div>
+    <div class="stat"><div class="l">為替</div><div class="v">${SET.rate}円</div></div>`;
+}
+
+// ---------- 詳細モーダル ----------
+function routeMatrix(it) {
+  const R = routes(it);
+  return `<div class="tbl"><table class="mx"><tr><th>仕入れ元 ＼ 販売先</th>${R.dsts.map(x => `<th>${esc(x.d.n)}<div class="muted">手取り ${yen(x.net)}${x.real ? ' <span class="chip real">実測</span>' : ''}</div></th>`).join('')}</tr>
+    ${R.rows.map(r => `<tr><td><b>${esc(r.s.n)}</b><div class="muted">仕入 ${yen(r.buy)}</div></td>${r.cells.map(c => c.profit == null ? '<td class="c muted">—</td>' : `<td class="c ${c.profit > 0 ? 'ok' : 'ng'} ${R.best && R.best.src === r.s && R.best.dst === c.d ? 'best' : ''}">${yen(c.profit)}<div class="muted">${pct(c.profit / Math.max(1, r.buy) * 100)}</div></td>`).join('')}</tr>`).join('')}
+  </table></div>
+  <div class="hint" style="margin-top:6px">セルは「販売先の手取り（中央値ベース） − 仕入れ元の安値（相場の下位25%点・送料込）」。動作品を安く拾って動作品として売る前提。枠付きが最良ルート。</div>`;
+}
+function junkPanel(it, J) {
+  return `<div class="pf"><div class="t">ジャンク（${yen(it.j[0])}〜${yen(it.j[1])}）で仕入れた場合の期待値</div>
+    <div>ムーブ ${mvChip(J.mv)}　復活確率 <b>${pct(J.p * 100)}</b>　まず試す処置：${esc(FIXCOST[J.mv][1])}（${yen(J.cheap)}）</div>
+    <div>復活したら → ${esc(J.bestDst.n)} で手取り ${yen(J.bestNet)} ＝ 利益 <b class="${J.okP > 0 ? 'ok' : 'ng'}">${yen(J.okP)}</b></div>
+    <div>失敗したら → ${J.failMode === 'repair' ? `${esc(FIXCOST[J.mv][3])}（${yen(J.big)}）して売る` : 'ジャンクのまま再出品（手取り ' + yen(J.junkNet) + '）'} ＝ <b class="${J.failP > 0 ? 'ok' : 'ng'}">${yen(J.failP)}</b></div>
+    <div>期待利益 <b class="${J.ev > 0 ? 'ok' : 'ng'}" style="font-size:16px">${yen(J.ev)}</b>　／　目標利益 ${yen(J.target)} を確保できる仕入上限（送料込） <b>${yen(J.maxBuy)}</b></div></div>`;
+}
+function openDetail(id) {
+  const it = BYID[id]; const R = routes(it), J = junkEV(it); const r = REAL[id] || {};
+  const realLine = k => r[k] ? `<span class="chip real">実測 ${r[k].n}件 中央値 ${k === 'ebay' ? usd(r[k].median) : yen(r[k].median)}（${(r[k].at || '').slice(0, 10)}）</span>` : '';
+  $('#modal_body').innerHTML = `
+    <div class="brand">${esc(it.brand)} ・ ${esc(CATS[it.cat])}</div><h2 style="font-size:18px;margin:4px 0 8px">${esc(it.name)}</h2>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${mvChip(it.mv)}<span class="chip">電池: ${esc(it.bat)}</span><span class="chip">裏蓋: ${BACK[it.back]}</span><span class="chip">需要 ${stars(it.d)}</span><span class="chip">ジャンク狙い目 ${stars(MV[it.mv][3])}</span></div>
+    <div class="stats">
+      <div class="stat"><div class="l">ジャンク相場</div><div class="v" style="font-size:15px">${yen(it.j[0])}〜${yen(it.j[1])}</div></div>
+      <div class="stat"><div class="l">メルカリ売切</div><div class="v" style="font-size:15px">${yen(it.m[0])}〜${yen(it.m[1])}</div>${realLine('mercari')}</div>
+      <div class="stat"><div class="l">ヤフオク落札</div><div class="v" style="font-size:15px">${yen(it.y[0])}〜${yen(it.y[1])}</div>${realLine('yahoo')}</div>
+      <div class="stat"><div class="l">セカスト店頭</div><div class="v" style="font-size:15px">${yen(it.s[0])}〜${yen(it.s[1])}</div>${realLine('second')}</div>
+      <div class="stat"><div class="l">eBay Sold</div><div class="v" style="font-size:15px">${usd(it.e[0])}〜${usd(it.e[1])}</div>${realLine('ebay')}</div>
+      <div class="stat"><div class="l">Yahoo!フリマ</div><div class="v" style="font-size:15px">${r.yfm ? yen(r.yfm.median) : 'メルカリ−' + SET.yfmDisc + '%'}</div>${realLine('yfm')}</div>
+    </div>
+    <h3>ルート利益マップ</h3>${routeMatrix(it)}
+    <h3>ジャンク狙い</h3>${junkPanel(it, J)}
+    ${it.risk.length ? `<h3>注意点</h3><ul class="list">${it.risk.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+    ${it.tip ? `<div class="note" style="margin-top:8px">${esc(it.tip)}</div>` : ''}
+    <h3>相場リンク</h3>${links(it.kj, it.kw)}
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="d_tojunk">このモデルでジャンク判定へ</button>
+      <button class="btn ghost" id="d_toroute">ルート計算へ</button>
+      ${(r.yahoo || r.mercari || r.ebay || r.yfm || r.second) ? '<button class="btn ghost small" id="d_realdel">実測データを削除</button>' : ''}
+    </div>`;
+  $('#modal').style.display = 'block';
+  $('#d_tojunk').onclick = () => { $('#modal').style.display = 'none'; $('#j_model').value = id; $('#j_mv').value = it.mv; showTab('junk'); };
+  $('#d_toroute').onclick = () => { $('#modal').style.display = 'none'; $('#r_model').value = id; fillRouteFromModel(); $('#r_map_model').value = id; renderMap(); showTab('route'); };
+  const del = $('#d_realdel'); if (del) del.onclick = () => { if (confirm('このモデルの実測データを削除しますか？')) { delete REAL[id]; LS('real', REAL); openDetail(id); render(); renderReal(); } };
+}
+$('#modal_x').onclick = () => $('#modal').style.display = 'none';
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#modal').style.display = 'none'; });
+
+// ---------- ジャンク判定 ----------
+const RULES = [
+  // [正規表現, 点数（関数可）, 説明, 追加コスト, 売値補正]
+  [/偽物|コピー品|レプリカ|模造|フェイク/, () => -100, '偽物・コピー表記 → 仕入れない'],
+  [/アクティベーションロック(あり|有り|有|が(かかって|残って|解除でき)|解除(不可|未|でき(ず|ません))|付き)|ロック解除(でき(ず|ません|ない)|不可|未)/, () => -90, 'アクティベーションロック解除不可 → 文鎮'],
+  [/ロック解除済|アクティベーションロック(なし|無し|解除済)|初期化済/, mv => mv === 'SM' ? 20 : 0, 'ロック解除済み（スマートウォッチの必須条件）'],
+  [/(電池|バッテリー)(を|は)?(交換|入れ替え|新品に)(して|しても|後|済み?|したが|したのですが)?(も|でも|ても|ですが|が)?[^。\n]{0,10}(不動|動か|動き|動作し|止ま|反応)|新品(の)?電池(でも|を入れても|に(して|替えて)も)|電池(を)?入れ(ても|替えても)/, () => -45, '電池交換しても不動 → 回路・ムーブメント故障の可能性大'],
+  [/水没|浸水|水入り|水が入|内部に水|結露|曇り(あり|が|有)/, () => -30, '水没・曇り → 内部腐食リスク'],
+  [/液漏れ|電池液|緑青/, () => -25, '液漏れ → 端子腐食。清掃で復活することもあるが減点'],
+  [/針(が|は)?(外れ|取れ|落ち|脱落|ずれ|飛び)|針飛び|針ずれ/, mv => mv === 'DG' ? -5 : -25, '針外れ・針ずれ → 分解整備が必要'],
+  [/(リューズ|竜頭|りゅうず)(が|は)?(取れ|外れ|欠損|無し|なし|ない|抜け|折れ|回らない|固い|固着|効かない)/, () => -30, 'リューズ欠損・不良 → 部品交換（3,000〜8,000円）', 5000],
+  [/(ガラス|風防|クリスタル|カバーガラス)(が|に)?(割れ|欠け|ヒビ|ひび|クラック)/, () => -15, 'ガラス割れ → 交換費用（2,000〜8,000円）', 3000, .9],
+  [/(画面|ディスプレイ|液晶画面)(が)?(割れ|ひび|ヒビ|バキバキ)/, () => -35, '画面割れ → 修理費高額', 10000, .8],
+  [/液晶(が)?(薄|欠け|表示(されない|しない|が出ない)|滲|にじみ|劣化|消え|焼け|黒ずみ|抜け)/, mv => (mv === 'DG' || mv === 'SM') ? -25 : -10, '液晶劣化 → 直らない（部品がない）', 0, .8],
+  [/錆|サビ|さび|腐食/, () => -15, '錆・腐食'],
+  [/分解(した|済|歴|され|して)|開けて(み|しま)|開封(した|済|して)|いじ(った|って)|素人(が|修理)/, () => -15, '分解歴あり → 部品欠損・組み間違いリスク'],
+  [/部品取り|パーツ取り|パーツ用/, () => -10, '部品取り表記'],
+  [/落下|落とし|衝撃|ぶつけ/, () => -15, '落下・衝撃歴'],
+  [/ボタン(が)?(効かない|反応しない|固着|押せない|利かない)|プッシュ(ボタン)?(が)?(固|効かない)/, () => -15, 'ボタン不良 → 固着は清掃で直ることもある'],
+  [/(遅れ|進み|日差|精度(が|不良)|時間が(狂|ずれ|合わ))/, mv => (mv === 'QZ' || mv === 'DG') ? -20 : -8, '遅れ・進み → クォーツなら回路/コイル不良、機械式はOHで改善'],
+  [/(振る|振れば|振って|巻く|巻けば|巻いて)と?(動く|動き|動きます|動作)/, mv => (mv === 'AT' || mv === 'HW' || mv === 'SPR') ? 15 : 0, '振る・巻くと動く → 機械式として致命的ではない（油切れ・動力切れ）'],
+  [/(全く|まったく|一切)(動か|反応)|うんともすんとも/, mv => (mv === 'AT' || mv === 'HW' || mv === 'SPR') ? -15 : 0, '機械式で全く動かない → 部品破損の可能性'],
+  [/(2秒|二秒|２秒)(運針|ずつ|毎|刻み|ごと)|秒針(だけ|のみ|が)?(2秒|二秒|２秒)/, mv => (mv === 'SOL' || mv === 'RS') ? 15 : (mv === 'QZ' ? 10 : 0), '2秒運針 → 電池残量警告（ソーラーは充電、クォーツは電池交換）の典型'],
+  [/充電(すれば|で|したら|すると|不足|切れ)|光に当て|暗所/, mv => (mv === 'SOL' || mv === 'RS' || mv === 'SM' || mv === 'KIN') ? 10 : 0, '充電不足の示唆 → 充電で復活しやすい'],
+  [/電池(切れ|が切れ|交換(で|すれば|が必要|時期|してください|をお願い)|は切れ|寿命|なし|無し|抜いて|抜き)|要電池交換/, mv => (mv === 'AT' || mv === 'HW' || mv === 'SPR') ? 0 : 15, '電池切れ表記 → 典型的な電池交換案件'],
+  [/止まって(い|お)(り|ます)|止まっています|停止して|停止中/, mv => (mv === 'AT' || mv === 'HW' || mv === 'SPR') ? -3 : 5, '「止まっている」のみ（原因未記載）'],
+  [/動作未確認|未確認|未チェック|確認して(い|おり)ません|動作(は)?不明|確認できて(い|おり)ません/, () => 5, '動作未確認 → 単に未チェック（電池切れの可能性）'],
+  [/未使用|デッドストック|長期保管|自宅保管|保管品|保管していた|しまって(い|あ)/, () => 8, '長期保管品 → 放電・電池切れの可能性が高い（状態は良い傾向）'],
+  [/(箱|保証書|ギャランティ|取説|説明書|余りコマ|付属品(あり|有り|完備))/, () => 3, '付属品あり → 売値アップ', 0, 1.05],
+  [/(美品|極美品|新品同様|未使用に近い)/, () => 3, '美品表記 → 売値アップ', 0, 1.08],
+  [/(傷(が)?(多|だらけ|目立)|使用感(が)?(強|あり|有り)|スレ(あり|多)|汚れ(あり|多)|打痕)/, () => -5, '傷・使用感あり → 売値ダウン', 0, .85],
+  [/(ベルト|バンド|ブレス)(が|は)?(切れ|ちぎれ|なし|無し|欠品|割れ|劣化|ボロ|べたつき|ベタつき|加水分解)/, () => -5, 'ベルト不良 → 交換 1,000〜3,000円', 1500],
+  [/動作(品|確認済|良好|します|しています|OK|ok)|稼働(品|中|確認)|正常(に)?動作|問題なく動/, () => 20, '動作品表記（ジャンクではない）'],
+  [/不動|動きません|動かない|動作しません|動作不良|ジャンク/, () => -5, '不動・ジャンク表記（原因未記載なら軽微な減点）'],
+  [/最大容量\s*(\d{2,3})\s*%/, (mv, m) => mv === 'SM' ? (+m[1] >= 85 ? 5 : +m[1] >= 80 ? 0 : -20) : 0, 'バッテリー最大容量の記載'],
+  [/(まとめ|セット|大量|おまとめ|本セット|点セット)/, () => 0, 'まとめ売り → 1点あたりの価格で判定を'],
+  [/ノークレーム|ノーリターン|返品不可|NC.?NR|返品(は)?(受け付け|お受けでき)ません/, () => 0, '返品不可 → 失敗時のリスクは自分持ち'],
+];
+function judge(text, mv) {
+  const t = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
+  let score = MV[mv][1], extra = 0, saleMul = 1; const reasons = [];
+  for (const [re, fn, label, cost, mul] of RULES) {
+    const m = t.match(re); if (!m) continue;
+    const d = fn(mv, m); if (d === 0 && !cost && !mul) { reasons.push({ d: 0, label }); continue; }
+    score += d; if (cost) extra += cost; if (mul) saleMul *= mul; reasons.push({ d, label });
+  }
+  score = Math.max(0, Math.min(100, score));
+  return { score, p: score / 100, extra, saleMul, reasons, working: /動作(品|確認済|良好|します|しています|OK|ok)|稼働(品|中|確認)|正常(に)?動作|問題なく動/.test(t) };
+}
+function normalize(s) { return s.toLowerCase().replace(/[Ａ-Ｚａ-ｚ０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[-‐－–—_\s　]/g, ''); }
+function detectModel(text) {
+  const t = normalize(text); const out = [];
+  for (const it of ITEMS) {
+    const toks = new Set((it.name + ' ' + it.kw + ' ' + it.kj + ' ' + it.brand).split(/[\/／（）()・,、。\s　×]+/).map(normalize).filter(x => x.length >= 3 || (x.length === 2 && /\d/.test(x))));
+    let sc = 0; const hit = [];
+    for (const tok of toks) { if (t.includes(tok)) { const w = (/\d/.test(tok) ? 3 : 1) * Math.min(tok.length, 8) / 4; sc += w; hit.push(tok); } }
+    if (sc >= 2) out.push({ it, sc, hit });
+  }
+  return out.sort((a, b) => b.sc - a.sc).slice(0, 5);
+}
+$('#j_detect').onclick = () => {
+  const c = detectModel($('#j_text').value); if (!c.length) { alert('モデルを特定できませんでした。手動で選んでください。'); return; }
+  $('#j_model').value = c[0].it.id; $('#j_mv').value = c[0].it.mv;
+  $('#j_out').innerHTML = `<div class="hint">候補：${c.map(x => `<button class="btn ghost small" data-id="${x.it.id}">${esc(x.it.brand)} ${esc(x.it.name)}（一致: ${esc(x.hit.join(', '))}）</button>`).join(' ')}</div>`;
+  $('#j_out').querySelectorAll('button').forEach(b => b.onclick = () => { $('#j_model').value = b.dataset.id; $('#j_mv').value = BYID[b.dataset.id].mv; });
+};
+$('#j_model').addEventListener('change', () => { const it = BYID[$('#j_model').value]; if (it) $('#j_mv').value = it.mv; });
+$('#j_src').addEventListener('change', () => { const s = SRC.find(x => x.id === $('#j_src').value); if (s) $('#j_ship').value = SET[s.ship]; });
+let lastJudge = null;
+$('#j_go').onclick = () => {
+  const text = $('#j_text').value.trim(); const mv = $('#j_mv').value; const it = BYID[$('#j_model').value] || null;
+  const price = +$('#j_price').value || 0, ship = +$('#j_ship').value || 0, saleIn = +$('#j_sale').value || 0;
+  const jd = judge(text, mv);
+  const lvl = jd.score >= 65 ? ['高', 'ok'] : jd.score >= 40 ? ['中', 'wn'] : ['低', 'ng'];
+  let html = `<div class="cmp"><div class="pf"><div class="t">復活確率（電池交換・充電など安い処置で動く見込み）</div>
+    <div style="font-size:28px;font-weight:bold" class="${lvl[1]}">${jd.score}%　${lvl[0]}</div><div class="gauge"><div style="width:${jd.score}%"></div></div>
+    <div class="muted">ムーブ ${mvChip(mv)} の基礎点 ${MV[mv][1]} に文言の加減点。まず試す処置：${esc(FIXCOST[mv][1])}（${yen(SET['c_' + mv])}）／ダメなら ${esc(FIXCOST[mv][3])}（${yen(SET['b_' + mv])}）</div>
+    ${jd.working ? '<div class="ok" style="margin-top:6px">動作品の表記があります。ジャンクではなく「差額せどり」として下の販売先手取りで判断してください。</div>' : ''}
+    </div>
+    <div class="pf"><div class="t">判定の根拠</div>${jd.reasons.length ? jd.reasons.map(r => `<div class="reason"><span class="d ${r.d > 0 ? 'ok' : r.d < 0 ? 'ng' : 'muted'}">${r.d > 0 ? '+' : ''}${r.d}</span><span>${esc(r.label)}</span></div>`).join('') : '<div class="muted">特記キーワードなし（ムーブメントの基礎点のみ）</div>'}
+    ${jd.extra ? `<div style="margin-top:6px">追加修理費の目安 <b>${yen(jd.extra)}</b></div>` : ''}${jd.saleMul !== 1 ? `<div>状態による売値補正 ×${jd.saleMul.toFixed(2)}</div>` : ''}</div></div>`;
+  let J = null;
+  if (it || saleIn) {
+    const buy = price + ship;
+    let dsts;
+    if (it) { const R = routes(it); dsts = R.dsts.map(x => ({ n: x.d.n, gross: x.gross * jd.saleMul, net: netOf(x.gross * jd.saleMul, x.d), real: x.real })); }
+    else { dsts = DST.filter(d => d.id !== 'ebay' && d.id !== 'kaitori').map(d => { const g = saleIn * ((d.disc) ? (1 - SET.yfmDisc / 100) : 1) * jd.saleMul; return { n: d.n, gross: g, net: netOf(g, d) }; }); }
+    if (it && saleIn) { dsts = DST.map(d => { const g = (d.id === 'ebay' ? saleIn : d.id === 'kaitori' ? saleIn * SET.kaitori / 100 : saleIn * (d.disc ? 1 - SET.yfmDisc / 100 : 1)) * jd.saleMul; return { n: d.n, gross: g, net: netOf(g, d) }; }); }
+    const best = dsts.reduce((a, b) => b.net > a.net ? b : a);
+    const base = it || { j: [price, price], id: '' };
+    const cheap = SET['c_' + mv] + jd.extra, big = SET['b_' + mv];
+    const junkNet = it ? (it.j[0] + it.j[1]) / 2 * (1 - SET.fMer / 100) - SET.sMer - SET.pack : price * 0.8 * (1 - SET.fMer / 100) - SET.sMer - SET.pack;
+    const okP = best.net - buy - cheap, repairP = best.net - buy - cheap - big, resellP = junkNet - buy - cheap, failP = Math.max(repairP, resellP);
+    const ev = jd.p * okP + (1 - jd.p) * failP; const target = Math.max(SET.tgtMin, best.net * SET.tgtPct / 100);
+    J = { p: jd.p, buy, cheap, big, bestNet: best.net, bestDstN: best.n, ev, maxBuy: ev + buy - target, target, okP, failP, failMode: repairP >= resellP ? 'repair' : 'resell', junkNet, working: jd.working, diff: best.net - buy };
+    html += `<h3>販売先ごとの手取り（${it ? esc(it.brand + ' ' + it.name) + ' の相場' : '入力した想定売値'}${jd.saleMul !== 1 ? '・状態補正後' : ''}）</h3>
+      <div class="tbl"><table><tr><th>販売先</th><th>想定売値</th><th>手取り</th><th>ジャンク仕入（${yen(buy)}＋処置 ${yen(cheap)}）からの利益</th></tr>
+      ${dsts.map(x => `<tr><td>${esc(x.n)}${x.real ? ' <span class="chip real">実測</span>' : ''}</td><td class="price">${yen(x.gross)}</td><td class="price">${yen(x.net)}</td><td class="price ${x.net - buy - cheap > 0 ? 'ok' : 'ng'}">${yen(x.net - buy - cheap)}</td></tr>`).join('')}</table></div>
+      <div class="pf" style="margin-top:10px"><div class="t">期待値（復活 ${pct(jd.p * 100)} × 成功時 ＋ 失敗 ${pct((1 - jd.p) * 100)} × 失敗時）</div>
+        <div>成功：${esc(best.n)} で売って <b class="${okP > 0 ? 'ok' : 'ng'}">${yen(okP)}</b></div>
+        <div>失敗：${J.failMode === 'repair' ? `${esc(FIXCOST[mv][3])}（${yen(big)}）して売る → ` : `ジャンクとして再出品（手取り ${yen(junkNet)}）→ `}<b class="${failP > 0 ? 'ok' : 'ng'}">${yen(failP)}</b></div>
+        <div style="margin-top:4px">期待利益 <b class="${ev > 0 ? 'ok' : 'ng'}" style="font-size:18px">${yen(ev)}</b>　仕入上限（送料込・目標利益 ${yen(target)}）<b>${yen(J.maxBuy)}</b>　${price + ship <= J.maxBuy ? '<span class="chip ok">この価格なら買い</span>' : '<span class="chip ng">この価格では見送り or 値下げ待ち</span>'}</div>
+        ${jd.working ? `<div style="margin-top:4px">動作品として買った場合の差額利益：<b class="${J.diff > 0 ? 'ok' : 'ng'}">${yen(J.diff)}</b></div>` : ''}
+      </div>`;
+    if (it) html += `<h3>相場リンク</h3>${links(it.kj, it.kw)}`;
+  } else {
+    html += `<div class="hint" style="margin-top:10px">モデルを選ぶか想定売値を入れると、販売先ごとの手取り・期待利益・仕入上限を計算します。</div>`;
+  }
+  html += `<div class="row" style="margin-top:12px"><button class="btn green" id="j_save">この案件を仕入れ候補に保存</button></div>`;
+  $('#j_out').innerHTML = html;
+  lastJudge = { text, mv, it, price, ship, jd, J };
+  $('#j_save').onclick = () => {
+    const title = text.split('\n')[0].slice(0, 80) || '（無題）';
+    CAND.unshift({ id: 'c' + Date.now(), at: new Date().toISOString(), title, url: '', src: $('#j_src').value, price, ship, model: it ? it.id : '', mv, p: jd.p, cost: J ? J.cheap : SET['c_' + mv] + jd.extra, bestDst: J ? J.bestDstN : '', bestNet: J ? J.bestNet : null, ev: J ? J.ev : null, status: '検討', sold: '', memo: '' });
+    LS('cand', CAND); renderCand(); alert('候補に保存しました（仕入れ候補タブ）');
+  };
+};
+
+// ---------- ルート計算 ----------
+function fillRouteFromModel() {
+  const it = BYID[$('#r_model').value]; if (!it) return;
+  const s = SRC.find(x => x.id === $('#r_src').value);
+  $('#r_cost').value = Math.round(s ? buyOf(it, s) - SET[s.ship] : bandLow(it, 'y').v);
+  $('#r_m').value = Math.round(bandMid(it, 'm').v); $('#r_y').value = Math.round(bandMid(it, 'y').v);
+  $('#r_f').value = Math.round(grossJPY(it, DST[2]).v); $('#r_e').value = Math.round(bandMid(it, 'e').v);
+  $('#r_k').value = Math.round(grossJPY(it, DST[5]).v); $('#r_fix').value = SET['c_' + it.mv];
+}
+$('#r_model').addEventListener('change', fillRouteFromModel);
+$('#r_src').addEventListener('change', () => { const s = SRC.find(x => x.id === $('#r_src').value); if (s) $('#r_bship').value = SET[s.ship]; fillRouteFromModel(); });
+$('#r_go').onclick = () => {
+  const cost = +$('#r_cost').value, bship = +$('#r_bship').value, fix = +$('#r_fix').value; const total = cost + bship + fix;
+  const vals = { mercari: +$('#r_m').value, yahoo: +$('#r_y').value, yfm: +$('#r_f').value, rakuma: +$('#r_f').value, ebay: +$('#r_e').value * SET.rate, kaitori: +$('#r_k').value };
+  const rows = DST.map(d => { const g = vals[d.id]; const fee = d.id === 'kaitori' ? 0 : g * (SET[d.fee] + (d.extra ? SET[d.extra] : 0)) / 100; const ship = d.id === 'kaitori' ? 0 : SET[d.ship] + SET.pack; const net = g - fee - ship; return { d, g, fee, ship, net, profit: net - total }; }).sort((a, b) => b.profit - a.profit);
+  const srcN = SRCN[$('#r_src').value];
+  $('#r_out').innerHTML = `<div class="hint">仕入れ総額 ${yen(total)}（${esc(srcN)} ${yen(cost)} ＋ 送料 ${yen(bship)} ＋ 整備 ${yen(fix)}）</div>
+    <div class="tbl" style="margin-top:6px"><table><tr><th>販売先</th><th>売値</th><th>手数料・引当</th><th>送料・梱包</th><th>手取り</th><th>利益</th><th>利益率 / ROI</th><th>仕入上限（目標利益込）</th></tr>
+    ${rows.map((r, i) => `<tr${i === 0 ? ' style="outline:2px solid var(--accent)"' : ''}><td><b>${esc(r.d.n)}</b></td><td class="price">${yen(r.g)}</td><td class="price">${yen(r.fee)}</td><td class="price">${yen(r.ship)}</td><td class="price">${yen(r.net)}</td><td class="price ${r.profit > 0 ? 'ok' : 'ng'}"><b>${yen(r.profit)}</b></td><td class="price">${r.g > 0 ? pct(r.profit / r.g * 100) : '—'} / ${total > 0 ? pct(r.profit / total * 100) : '—'}</td><td class="price">${yen(r.net - Math.max(SET.tgtMin, r.net * SET.tgtPct / 100) - bship - fix)}</td></tr>`).join('')}</table></div>
+    <div style="margin-top:8px">${rows[0].profit > 0 ? `<span class="chip ok">${esc(srcN)} → ${esc(rows[0].d.n)} で利益 ${yen(rows[0].profit)}</span>` : '<span class="chip ng">どの販売先でも赤字。仕入値を下げるか見送り</span>'}</div>`;
+};
+function renderMap() { const it = BYID[$('#r_map_model').value]; if (!it) return; $('#r_map').innerHTML = `<div class="name" style="margin-bottom:6px">${esc(it.brand)} ${esc(it.name)}</div>` + routeMatrix(it) + '<div style="margin-top:10px">' + junkPanel(it, junkEV(it)) + '</div>'; }
+$('#r_map_model').addEventListener('change', renderMap);
+
+// ---------- リンク生成 ----------
+$('#sq_go').onclick = () => { const kj = $('#sq_jp').value.trim(), kw = $('#sq_en').value.trim() || kj; if (!kj) return; $('#sq_links').innerHTML = links(kj, kw); };
+$('#sq_jp').addEventListener('keydown', e => { if (e.key === 'Enter') $('#sq_go').click(); });
+
+// ---------- ブックマークレット ----------
+const BM = {
+  yahoo: `(()=>{const S=(el,ss)=>{for(const s of ss){const x=el.querySelector(s);if(x&&x.innerText&&x.innerText.trim())return x.innerText.trim()}return ''};const items=[];for(const li of document.querySelectorAll('.Product,li.Product,[class*=Product__]>li,li[class*=Product]')){const t=S(li,['.Product__titleLink','.Product__title','a[data-auction-title]','h3']);const p=S(li,['.Product__priceValue','.Product__price','[class*=price]']);const b=S(li,['.Product__bid','[class*=bid]']);const d=S(li,['.Product__time','[class*=time]']);const m=p.replace(/,/g,'').match(/\\d+/);if(m&&t)items.push({t,p:+m[0],b:+((b.match(/\\d+/)||[0])[0]),d})}if(!items.length){const txt=document.body.innerText;const re=/([^\\n]{6,120})\\n[^\\n]*?([\\d,]{3,})円[^\\n]*\\n?[^\\n]*?(\\d+)\\s*入札?/g;let m;while((m=re.exec(txt)))items.push({t:m[1].trim(),p:+m[2].replace(/,/g,''),b:+m[3]})}const cnt=S(document,['.Tab__subText','.SearchMode__title','[class*=Tab__subText]','[class*=resultNum]']);const q=(document.querySelector('#yschsp')||document.querySelector('input[name=p]')||{}).value||'';const out=JSON.stringify({site:'yahoo',q,cnt,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('ヤフオク '+items.length+'件をコピーしました。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
+  mercari: `(()=>{const items=[];for(const li of document.querySelectorAll('li[data-testid="item-cell"],[data-testid="item-cell"]')){const txt=li.innerText||'';const m=txt.replace(/,/g,'').match(/[¥￥]\\s?(\\d+)/);const t=(txt.split('\\n').find(s=>s.trim()&&!/[¥￥]/.test(s))||'').trim();if(m)items.push({t,p:+m[1]})}const q=(document.querySelector('input[type=search]')||document.querySelector('input[name=keyword]')||{}).value||'';const out=JSON.stringify({site:'mercari',q,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('メルカリ '+items.length+'件をコピーしました。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
+  ebay: `(()=>{const S=(el,ss)=>{for(const s of ss){const x=el.querySelector(s);if(x&&x.innerText&&x.innerText.trim())return x.innerText.trim()}return ''};const items=[];const cards=document.querySelectorAll('li.s-item,li.s-card,.s-item__wrapper,ul.srp-results>li');for(const li of cards){const t=S(li,['.s-item__title','.s-card__title','[role=heading]','h3']);const p=S(li,['.s-item__price','.s-card__price','[class*=price]']);const d=S(li,['.s-item__caption','.s-item__ended-date','.s-card__caption','[class*=ended]','[class*=caption]']);const m=p.replace(/,/g,'').match(/\\d+(?:\\.\\d{2})?/);if(m&&t&&!/^Shop on eBay/i.test(t))items.push({t,p:parseFloat(m[0]),d})}const cnt=S(document,['.srp-controls__count-heading','[class*=count-heading]']);const q=(document.querySelector('#gh-ac')||{}).value||'';const out=JSON.stringify({site:'ebay',q,cnt,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('eBay '+items.length+'件をコピーしました。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
+  yfm: `(()=>{const items=[];const seen=new Set();for(const a of document.querySelectorAll('a[href*="/item/"]')){const txt=a.innerText||'';const m=txt.replace(/,/g,'').match(/[¥￥]\\s?(\\d+)/);if(!m||seen.has(a.href))continue;seen.add(a.href);const t=(txt.split('\\n').map(s=>s.trim()).find(s=>s&&!/[¥￥]/.test(s)&&!/^(SOLD|売り切れ)$/i.test(s))||'');items.push({t,p:+m[1],sold:/SOLD|売り切れ/i.test(txt)})}const q=(document.querySelector('input[type=search]')||document.querySelector('input[name=query]')||{}).value||decodeURIComponent((location.pathname.match(/\\/search\\/([^/?]+)/)||[,''])[1]);const out=JSON.stringify({site:'yfm',q,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('Yahoo!フリマ '+items.length+'件をコピーしました（SOLD '+items.filter(i=>i.sold).length+'件）');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
+  second: `(()=>{const items=[];const seen=new Set();for(const a of document.querySelectorAll('a[href*="/goods/detail/"]')){const txt=a.innerText||'';const m=txt.replace(/,/g,'').match(/[¥￥]\\s?(\\d+)|(\\d{3,})円/);if(!m||seen.has(a.href))continue;seen.add(a.href);const t=(txt.split('\\n').map(s=>s.trim()).find(s=>s&&!/[¥￥]|円/.test(s))||'');items.push({t,p:+(m[1]||m[2])})}const q=(document.querySelector('input[name=keyword]')||document.querySelector('input[type=search]')||{}).value||'';const out=JSON.stringify({site:'second',q,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('セカスト '+items.length+'件をコピーしました。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`
+};
+Object.keys(BM).forEach(k => { $('#bm_' + k).href = 'javascript:' + BM[k]; });
+document.querySelectorAll('.bm').forEach(a => a.addEventListener('click', e => { e.preventDefault(); alert('このボタンはブックマークバーへドラッグして登録してください。'); }));
+
+// ---------- 取り込み解析 ----------
+const SITEN = { yahoo: 'ヤフオク落札', mercari: 'メルカリ売切', ebay: 'eBay Sold', yfm: 'Yahoo!フリマ', second: 'セカストオンライン' };
+let lastParsed = null;
+function stats(arr) {
+  const a = arr.filter(n => isFinite(n) && n > 0).sort((x, y) => x - y); if (!a.length) return null;
+  const q = p => a[Math.min(a.length - 1, Math.floor(a.length * p))];
+  return { n: a.length, median: q(0.5), avg: Math.round(a.reduce((s, v) => s + v, 0) / a.length * 100) / 100, min: a[0], max: a[a.length - 1], p25: q(0.25), p75: q(0.75) };
+}
+$('#paste_go').onclick = () => {
+  let j; try { j = JSON.parse($('#paste').value.trim()); } catch (e) { $('#paste_out').innerHTML = '<div class="ng">JSONとして読めませんでした。ブックマークレットでコピーした内容をそのまま貼り付けてください。</div>'; return; }
+  let items = j.items || [];
+  if (j.site === 'yfm' && items.some(i => i.sold)) items = items.filter(i => i.sold);  // SOLD があれば売切のみ
+  const st = stats(items.map(i => +i.p));
+  if (!st) { $('#paste_out').innerHTML = `<div class="ng">価格データが0件でした（site: ${esc(j.site)}）。ページ構造が変わった可能性があります。</div>`; lastParsed = null; $('#paste_save').disabled = true; return; }
+  const unit = j.site === 'ebay' ? usd : yen;
+  const res = Object.assign({ site: j.site, q: j.q, cnt: j.cnt, at: j.at }, st);
+  if (j.site === 'yahoo') { const bids = items.map(i => +i.b || 0); res.avgBids = Math.round(bids.reduce((s, v) => s + v, 0) / bids.length * 10) / 10; res.contested = Math.round(bids.filter(b => b >= 2).length / bids.length * 100); }
+  lastParsed = res; $('#paste_save').disabled = false;
+  $('#paste_out').innerHTML = `<div class="stats">
+      <div class="stat"><div class="l">サイト / 検索語</div><div class="v" style="font-size:14px">${esc(SITEN[j.site] || j.site)} / ${esc(j.q || '')}</div></div>
+      <div class="stat"><div class="l">取得件数</div><div class="v">${st.n}</div></div>
+      <div class="stat"><div class="l">中央値</div><div class="v">${unit(st.median)}</div></div>
+      <div class="stat"><div class="l">平均</div><div class="v">${unit(st.avg)}</div></div>
+      <div class="stat"><div class="l">25%〜75%</div><div class="v" style="font-size:14px">${unit(st.p25)}〜${unit(st.p75)}</div></div>
+      <div class="stat"><div class="l">最小〜最大</div><div class="v" style="font-size:14px">${unit(st.min)}〜${unit(st.max)}</div></div>
+      ${res.avgBids != null ? `<div class="stat"><div class="l">平均入札数</div><div class="v">${res.avgBids}</div></div><div class="stat"><div class="l">競り率（入札2件以上）</div><div class="v">${res.contested}%</div></div>` : ''}
+    </div>
+    <div class="hint" style="margin-top:8px">${j.site === 'second' ? 'セカストは店頭・オンラインの「売値」。仕入れ元としての価格になります。' : j.site === 'ebay' ? 'eBay：販売先の相場（USD）。為替は設定の値で換算されます。' : 'ジャンク相場を取りたい場合は「ジャンク」を含めて検索した結果を別途取り込み、ジャンク判定タブの価格欄に手入力してください。'}</div>
+    <details style="margin-top:8px"><summary class="muted">取得明細（${st.n}件）</summary><div class="tbl"><table>${items.slice(0, 200).map(i => `<tr><td>${esc(i.t)}</td><td class="price">${unit(+i.p)}</td><td>${i.b != null ? i.b + '入札' : ''}</td><td class="muted">${esc(i.d || '')}</td></tr>`).join('')}</table></div></details>`;
+};
+$('#paste_save').onclick = () => {
+  const id = $('#paste_item').value; if (!id || !lastParsed) { alert('紐づけるモデルを選んでください'); return; }
+  REAL[id] = REAL[id] || {}; REAL[id][lastParsed.site] = lastParsed; LS('real', REAL);
+  alert('保存しました。一覧・ルート・ジャンク判定が実測中央値で再計算されます。'); render(); renderReal();
+};
+function renderReal() {
+  const ids = Object.keys(REAL); if (!ids.length) { $('#real_list').innerHTML = '<div class="muted">まだありません。</div>'; return; }
+  $('#real_list').innerHTML = `<div class="tbl"><table><tr><th>モデル</th><th>サイト</th><th>件数</th><th>中央値</th><th>取得日</th><th></th></tr>${ids.flatMap(id => Object.entries(REAL[id]).map(([site, r]) => `<tr><td>${esc(BYID[id] ? BYID[id].brand + ' ' + BYID[id].name : id)}</td><td>${esc(SITEN[site] || site)}</td><td>${r.n}</td><td class="price">${site === 'ebay' ? usd(r.median) : yen(r.median)}</td><td class="muted">${(r.at || '').slice(0, 10)}</td><td><button class="btn ghost small" data-id="${id}" data-site="${site}">削除</button></td></tr>`)).join('')}</table></div>`;
+  $('#real_list').querySelectorAll('button').forEach(b => b.onclick = () => { delete REAL[b.dataset.id][b.dataset.site]; if (!Object.keys(REAL[b.dataset.id]).length) delete REAL[b.dataset.id]; LS('real', REAL); renderReal(); render(); });
+}
+
+// ---------- 仕入れ候補 ----------
+const STATUS = ['検討', '入札中', '購入済', '整備中', '出品中', '売却済', '見送り'];
+function renderCand() {
+  const tb = $('#cand_tbl tbody');
+  if (!CAND.length) { tb.innerHTML = '<tr><td colspan="11" class="muted">候補はまだありません。</td></tr>'; $('#c_sum').textContent = ''; return; }
+  tb.innerHTML = CAND.map(c => `<tr>
+    <td class="muted">${c.at.slice(0, 10)}</td>
+    <td>${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener" style="color:var(--info)">${esc(c.title)}</a>` : esc(c.title)}${c.model && BYID[c.model] ? `<div class="muted">${esc(BYID[c.model].brand + ' ' + BYID[c.model].name)}</div>` : ''}</td>
+    <td>${esc(SRCN[c.src] || c.src)}</td><td class="price">${yen(c.price)}${c.ship ? `<div class="muted">+送料 ${yen(c.ship)}</div>` : ''}</td>
+    <td>${c.p != null ? `<span class="${c.p >= .65 ? 'ok' : c.p >= .4 ? 'wn' : 'ng'}">${pct(c.p * 100)}</span>` : '—'}<div class="muted">${c.mv ? MV[c.mv][0] : ''}</div></td>
+    <td class="price">${c.cost != null ? yen(c.cost) : '—'}</td>
+    <td>${c.bestDst ? `${esc(c.bestDst)}<div class="muted">${yen(c.bestNet)}</div>` : '—'}</td>
+    <td class="price ${c.ev > 0 ? 'ok' : 'ng'}"><b>${c.ev != null ? yen(c.ev) : '—'}</b></td>
+    <td><select data-id="${c.id}" class="c_status">${STATUS.map(s => `<option${s === c.status ? ' selected' : ''}>${s}</option>`).join('')}</select></td>
+    <td><input type="number" data-id="${c.id}" class="c_sold" value="${esc(c.sold)}" style="width:90px" placeholder="円"></td>
+    <td><button class="btn ghost small" data-del="${c.id}">削除</button></td></tr>`).join('');
+  tb.querySelectorAll('.c_status').forEach(s => s.onchange = () => { const c = CAND.find(x => x.id === s.dataset.id); c.status = s.value; LS('cand', CAND); sumCand(); });
+  tb.querySelectorAll('.c_sold').forEach(s => s.onchange = () => { const c = CAND.find(x => x.id === s.dataset.id); c.sold = s.value; LS('cand', CAND); sumCand(); });
+  tb.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { CAND = CAND.filter(x => x.id !== b.dataset.del); LS('cand', CAND); renderCand(); });
+  sumCand();
+}
+function sumCand() {
+  const sold = CAND.filter(c => c.status === '売却済' && +c.sold > 0);
+  const realized = sold.reduce((s, c) => s + (+c.sold * (1 - SET.fMer / 100) - SET.sMer - SET.pack - c.price - (c.ship || 0) - (c.cost || 0)), 0);
+  $('#c_sum').textContent = `候補 ${CAND.length}件 ／ 売却済 ${sold.length}件（実現利益の概算 ${yen(realized)}・メルカリ手数料で計算）`;
+}
+$('#c_add').onclick = () => {
+  const title = $('#c_title').value.trim(); if (!title) { alert('タイトルを入力してください'); return; }
+  const it = BYID[$('#c_model').value] || null; const price = +$('#c_price').value || 0; const src = $('#c_src').value; const s = SRC.find(x => x.id === src);
+  let J = null; if (it) J = junkEV(it, { buy: price + SET[s.ship] });
+  CAND.unshift({ id: 'c' + Date.now(), at: new Date().toISOString(), title, url: $('#c_url').value.trim(), src, price, ship: SET[s.ship], model: it ? it.id : '', mv: it ? it.mv : '', p: J ? J.p : null, cost: J ? J.cheap : null, bestDst: J ? J.bestDst.n : '', bestNet: J ? J.bestNet : null, ev: J ? J.ev : null, status: '検討', sold: '', memo: '' });
+  LS('cand', CAND); $('#c_title').value = ''; $('#c_url').value = ''; renderCand();
+};
+$('#c_csv').onclick = () => {
+  const esc2 = v => { const s = String(v ?? '').replace(/\r?\n/g, ' '); return /[",]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const rows = [['日付', 'タイトル', 'URL', '仕入れ元', '仕入値', '仕入送料', 'モデル', 'ムーブ', '復活確率', '想定コスト', '最良販売先', '手取り', '期待利益', 'ステータス', '実売値']]
+    .concat(CAND.map(c => [c.at.slice(0, 10), c.title, c.url, SRCN[c.src] || c.src, c.price, c.ship || 0, c.model && BYID[c.model] ? BYID[c.model].brand + ' ' + BYID[c.model].name : '', c.mv ? MV[c.mv][0] : '', c.p != null ? Math.round(c.p * 100) + '%' : '', c.cost ?? '', c.bestDst, c.bestNet != null ? Math.round(c.bestNet) : '', c.ev != null ? Math.round(c.ev) : '', c.status, c.sold]));
+  const blob = new Blob(['\ufeff' + rows.map(r => r.map(esc2).join(',')).join('\r\n')], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'watch-sedori-候補-' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+};
+$('#c_clear_sold').onclick = () => { if (confirm('売却済みの候補を削除しますか？')) { CAND = CAND.filter(c => c.status !== '売却済'); LS('cand', CAND); renderCand(); } };
+
+// ---------- 設定 ----------
+function buildFixInputs() {
+  $('#s_fix').innerHTML = Object.keys(FIXCOST).map(k => `<div class="field"><label>${MV[k][0]}：${esc(FIXCOST[k][1])}</label><input type="number" id="s_c_${k}"></div><div class="field"><label>${MV[k][0]}：${esc(FIXCOST[k][3])}</label><input type="number" id="s_b_${k}"></div>`).join('');
+}
+function loadSet() { Object.keys(DEF).forEach(k => { const el = $('#s_' + k); if (el) el.value = SET[k]; }); }
+$('#s_save').onclick = () => { Object.keys(DEF).forEach(k => { const el = $('#s_' + k); if (el) SET[k] = +el.value; }); LS('set', SET); render(); renderMap(); alert('保存しました'); };
+$('#s_reset').onclick = () => { SET = Object.assign({}, DEF); LS('set', SET); loadSet(); render(); renderMap(); };
+$('#s_wipe').onclick = () => { if (confirm('実測データと仕入れ候補をすべて削除します。よろしいですか？')) { REAL = {}; CAND = []; LS('real', REAL); LS('cand', CAND); render(); renderReal(); renderCand(); } };
+
+// ---------- タブ・初期化 ----------
+function showTab(t) { document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t)); document.querySelectorAll('main > section').forEach(s => s.classList.toggle('on', s.id === 'tab-' + t)); window.scrollTo(0, 0); }
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+fillSelect('#f_cat', Object.entries(CATS), 'すべて');
+fillSelect('#f_mv', Object.entries(MV).map(([k, v]) => [k, v[0]]), 'すべて');
+fillSelect('#j_mv', Object.entries(MV).map(([k, v]) => [k, v[0]]));
+fillSelect('#j_src', SRC.map(s => [s.id, s.n])); fillSelect('#r_src', SRC.map(s => [s.id, s.n])); fillSelect('#c_src', SRC.map(s => [s.id, s.n]));
+fillSelect('#j_model', modelOptions(), '（未特定・ムーブメントだけで判定）'); fillSelect('#r_model', modelOptions(), '（手入力）'); fillSelect('#r_map_model', modelOptions()); fillSelect('#paste_item', modelOptions(), '（紐づけない）'); fillSelect('#c_model', modelOptions(), '（未特定）');
+['#f_q', '#f_cat', '#f_mv', '#f_js', '#f_sort', '#f_pos'].forEach(s => $(s).addEventListener('input', render));
+buildFixInputs(); loadSet(); render(); renderReal(); renderCand(); renderMap(); fillRouteFromModel();
+$('#j_ship').value = SET.bYah; $('#r_bship').value = SET.bYah;
+</script>
+</body>
+</html>
