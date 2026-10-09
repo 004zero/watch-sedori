@@ -137,6 +137,21 @@
     <div class="hint" style="margin-top:8px">一覧でモデル名をクリック →「ヤフオク ジャンク出品中（安い順）」のリンクを押すと、そのモデルのジャンクが安い順に並びます。気になる出品があったら、この画面に戻って①②③。</div>
   </div>
   <div class="card">
+    <h2>もっと自動化する（Chrome拡張・新着通知・AI写真判定）</h2>
+    <div class="cmp">
+      <div class="pf"><div class="t">① Chrome拡張「腕時計せどりナビ 拡張」</div>
+        ヤフオク・メルカリ・Yahoo!フリマの商品ページで右下の「⌚ 判定」を押すだけ。コピペ不要で、相場の自動取得→買い／見送り→候補保存まで。検索結果ページでは一覧全体に判定バッジが付きます。
+        <div class="links" style="margin-top:8px"><a class="gd" href="https://github.com/004zero/watch-sedori/archive/refs/heads/main.zip">ZIPをダウンロード</a><a class="gd" href="https://github.com/004zero/watch-sedori/tree/main/extension" target="_blank" rel="noopener">インストール手順（README）</a></div>
+        <div class="hint" style="margin-top:6px">ZIPを展開 → Chrome の chrome://extensions で「デベロッパー モード」ON →「パッケージ化されていない拡張機能を読み込む」→ 展開した中の <b>extension</b> フォルダを選ぶ。</div></div>
+      <div class="pf"><div class="t">② 新着を自動で知らせてもらう（公式機能・規約の心配なし）</div>
+        下の「通知を設定する」で検索ページを開き、<b>ヤフオクは「条件を保存」→ 新着通知ON</b>、<b>メルカリは「検索条件を保存」→ 通知ON</b> を押すと、狙いの型番の「ジャンク」「電池切れ」が出品された瞬間にメール／アプリ通知が届きます。通知が来たら拡張の「⌚ 判定」。
+        <div class="row" style="margin-top:8px"><div class="field"><label>型番・モデル</label><input id="n_kw" placeholder="例：DW-5600" style="width:180px"></div><button class="btn small" id="n_go">通知を設定する（検索ページを開く）</button></div>
+        <div id="n_out" style="margin-top:8px"></div></div>
+      <div class="pf"><div class="t">③ AIで写真と説明文を読む</div>
+        拡張の設定で Claude APIキーを登録すると、判定パネルの「🤖 AIで写真と説明を判定」が使えます。液晶の薄さ・液漏れ痕・ベゼルの加水分解・偽物の兆候を写真から読み、復活確率と売値を補正します（1回数円〜十数円）。</div>
+    </div>
+  </div>
+  <div class="card">
     <h2>流れのまとめ</h2>
     <ol class="list">
       <li><b>探す</b>：ヤフオク／メルカリで「モデル名 ジャンク」や「電池切れ」で検索（上の一覧のリンクでも可）</li>
@@ -411,6 +426,7 @@
 <div id="modal"><div class="box"><button class="x" id="modal_x">✕</button><div id="modal_body"></div></div></div>
 
 <script src="data.js"></script>
+<script src="core.js"></script>
 <script>
 // ---------- 設定 ----------
 const DEF = { rate:150, fMer:10, fYah:10, fYfm:5, fRak:10, fEb:15, eTariff:15, kaitori:60, yfmDisc:5,
@@ -620,65 +636,7 @@ $('#modal_x').onclick = () => $('#modal').style.display = 'none';
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#modal').style.display = 'none'; });
 
 // ---------- ジャンク判定 ----------
-const RULES = [
-  // [正規表現, 点数（関数可）, 説明, 追加コスト, 売値補正]
-  [/偽物|コピー品|レプリカ|模造|フェイク/, () => -100, '偽物・コピー表記 → 仕入れない'],
-  [/アクティベーションロック(あり|有り|有|が(かかって|残って|解除でき)|解除(不可|未|でき(ず|ません))|付き)|ロック解除(でき(ず|ません|ない)|不可|未)/, () => -90, 'アクティベーションロック解除不可 → 文鎮'],
-  [/ロック解除済|アクティベーションロック(なし|無し|解除済)|初期化済/, mv => mv === 'SM' ? 20 : 0, 'ロック解除済み（スマートウォッチの必須条件）'],
-  [/(電池|バッテリー)(を|は)?(交換|入れ替え|新品に)(して|しても|後|済み?|したが|したのですが)?(も|でも|ても|ですが|が)?[^。\n]{0,10}(不動|動か|動き|動作し|止ま|反応)|新品(の)?電池(でも|を入れても|に(して|替えて)も)|電池(を)?入れ(ても|替えても)/, () => -45, '電池交換しても不動 → 回路・ムーブメント故障の可能性大'],
-  [/水没|浸水|水入り|水が入|内部に水|結露|曇り(あり|が|有)/, () => -30, '水没・曇り → 内部腐食リスク'],
-  [/液漏れ|電池液|緑青/, () => -25, '液漏れ → 端子腐食。清掃で復活することもあるが減点'],
-  [/針(が|は)?(外れ|取れ|落ち|脱落|ずれ|飛び)|針飛び|針ずれ/, mv => mv === 'DG' ? -5 : -25, '針外れ・針ずれ → 分解整備が必要'],
-  [/(リューズ|竜頭|りゅうず)(が|は)?(取れ|外れ|欠損|無し|なし|ない|抜け|折れ|回らない|固い|固着|効かない)/, () => -30, 'リューズ欠損・不良 → 部品交換（3,000〜8,000円）', 5000],
-  [/(ガラス|風防|クリスタル|カバーガラス)(が|に)?(割れ|欠け|ヒビ|ひび|クラック)/, () => -15, 'ガラス割れ → 交換費用（2,000〜8,000円）', 3000, .9],
-  [/(画面|ディスプレイ|液晶画面)(が)?(割れ|ひび|ヒビ|バキバキ)/, () => -35, '画面割れ → 修理費高額', 10000, .8],
-  [/液晶(が)?(薄|欠け|表示(されない|しない|が出ない)|滲|にじみ|劣化|消え|焼け|黒ずみ|抜け)/, mv => (mv === 'DG' || mv === 'SM') ? -25 : -10, '液晶劣化 → 直らない（部品がない）', 0, .8],
-  [/錆|サビ|さび|腐食/, () => -15, '錆・腐食'],
-  [/分解(した|済|歴|され|して)|開けて(み|しま)|開封(した|済|して)|いじ(った|って)|素人(が|修理)/, () => -15, '分解歴あり → 部品欠損・組み間違いリスク'],
-  [/部品取り|パーツ取り|パーツ用/, () => -10, '部品取り表記'],
-  [/落下|落とし|衝撃|ぶつけ/, () => -15, '落下・衝撃歴'],
-  [/ボタン(が)?(効かない|反応しない|固着|押せない|利かない)|プッシュ(ボタン)?(が)?(固|効かない)/, () => -15, 'ボタン不良 → 固着は清掃で直ることもある'],
-  [/(遅れ|進み|日差|精度(が|不良)|時間が(狂|ずれ|合わ))/, mv => (mv === 'QZ' || mv === 'DG') ? -20 : -8, '遅れ・進み → クォーツなら回路/コイル不良、機械式はOHで改善'],
-  [/(振る|振れば|振って|巻く|巻けば|巻いて)と?(動く|動き|動きます|動作)/, mv => (mv === 'AT' || mv === 'HW' || mv === 'SPR') ? 15 : 0, '振る・巻くと動く → 機械式として致命的ではない（油切れ・動力切れ）'],
-  [/(全く|まったく|一切)(動か|反応)|うんともすんとも/, mv => (mv === 'AT' || mv === 'HW' || mv === 'SPR') ? -15 : 0, '機械式で全く動かない → 部品破損の可能性'],
-  [/(2秒|二秒|２秒)(運針|ずつ|毎|刻み|ごと)|秒針(だけ|のみ|が)?(2秒|二秒|２秒)/, mv => (mv === 'SOL' || mv === 'RS') ? 15 : (mv === 'QZ' ? 10 : 0), '2秒運針 → 電池残量警告（ソーラーは充電、クォーツは電池交換）の典型'],
-  [/充電(すれば|で|したら|すると|不足|切れ)|光に当て|暗所/, mv => (mv === 'SOL' || mv === 'RS' || mv === 'SM' || mv === 'KIN') ? 10 : 0, '充電不足の示唆 → 充電で復活しやすい'],
-  [/電池(切れ|が切れ|交換(で|すれば|が必要|時期|してください|をお願い)|は切れ|寿命|なし|無し|抜いて|抜き)|要電池交換/, mv => (mv === 'AT' || mv === 'HW' || mv === 'SPR') ? 0 : 15, '電池切れ表記 → 典型的な電池交換案件'],
-  [/止まって(い|お)(り|ます)|止まっています|停止して|停止中/, mv => (mv === 'AT' || mv === 'HW' || mv === 'SPR') ? -3 : 5, '「止まっている」のみ（原因未記載）'],
-  [/動作未確認|未確認|未チェック|確認して(い|おり)ません|動作(は)?不明|確認できて(い|おり)ません/, () => 5, '動作未確認 → 単に未チェック（電池切れの可能性）'],
-  [/未使用|デッドストック|長期保管|自宅保管|保管品|保管していた|しまって(い|あ)/, () => 8, '長期保管品 → 放電・電池切れの可能性が高い（状態は良い傾向）'],
-  [/(箱|保証書|ギャランティ|取説|説明書|余りコマ|付属品(あり|有り|完備))/, () => 3, '付属品あり → 売値アップ', 0, 1.05],
-  [/(美品|極美品|新品同様|未使用に近い)/, () => 3, '美品表記 → 売値アップ', 0, 1.08],
-  [/(傷(が)?(多|だらけ|目立)|使用感(が)?(強|あり|有り)|スレ(あり|多)|汚れ(あり|多)|打痕)/, () => -5, '傷・使用感あり → 売値ダウン', 0, .85],
-  [/(ベルト|バンド|ブレス)(が|は)?(切れ|ちぎれ|なし|無し|欠品|割れ|劣化|ボロ|べたつき|ベタつき|加水分解)/, () => -5, 'ベルト不良 → 交換 1,000〜3,000円', 1500],
-  [/動作(品|確認済|良好|します|しています|OK|ok)|稼働(品|中|確認)|正常(に)?動作|問題なく動/, () => 20, '動作品表記（ジャンクではない）'],
-  [/不動|動きません|動かない|動作しません|動作不良|ジャンク/, () => -5, '不動・ジャンク表記（原因未記載なら軽微な減点）'],
-  [/最大容量\s*(\d{2,3})\s*%/, (mv, m) => mv === 'SM' ? (+m[1] >= 85 ? 5 : +m[1] >= 80 ? 0 : -20) : 0, 'バッテリー最大容量の記載'],
-  [/(まとめ|セット|大量|おまとめ|本セット|点セット)/, () => 0, 'まとめ売り → 1点あたりの価格で判定を'],
-  [/ノークレーム|ノーリターン|返品不可|NC.?NR|返品(は)?(受け付け|お受けでき)ません/, () => 0, '返品不可 → 失敗時のリスクは自分持ち'],
-];
-function judge(text, mv) {
-  const t = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
-  let score = MV[mv][1], extra = 0, saleMul = 1; const reasons = [];
-  for (const [re, fn, label, cost, mul] of RULES) {
-    const m = t.match(re); if (!m) continue;
-    const d = fn(mv, m); if (d === 0 && !cost && !mul) { reasons.push({ d: 0, label }); continue; }
-    score += d; if (cost) extra += cost; if (mul) saleMul *= mul; reasons.push({ d, label });
-  }
-  score = Math.max(0, Math.min(100, score));
-  return { score, p: score / 100, extra, saleMul, reasons, working: /動作(品|確認済|良好|します|しています|OK|ok)|稼働(品|中|確認)|正常(に)?動作|問題なく動/.test(t) };
-}
-function normalize(s) { return s.toLowerCase().replace(/[Ａ-Ｚａ-ｚ０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[-‐－–—_\s　]/g, ''); }
-function detectModel(text) {
-  const t = normalize(text); const out = [];
-  for (const it of ITEMS) {
-    const toks = new Set((it.name + ' ' + it.kw + ' ' + it.kj + ' ' + it.brand).split(/[\/／（）()・,、。\s　×]+/).map(normalize).filter(x => x.length >= 3 || (x.length === 2 && /\d/.test(x))));
-    let sc = 0; const hit = [];
-    for (const tok of toks) { if (t.includes(tok)) { const w = (/\d/.test(tok) ? 3 : 1) * Math.min(tok.length, 8) / 4; sc += w; hit.push(tok); } }
-    if (sc >= 2) out.push({ it, sc, hit });
-  }
-  return out.sort((a, b) => b.sc - a.sc).slice(0, 5);
-}
+// RULES / judge / normalize / detectModel は core.js（拡張機能と共有）
 $('#j_detect').onclick = () => {
   const c = detectModel($('#j_text').value); if (!c.length) { alert('モデルを特定できませんでした。手動で選んでください。'); return; }
   $('#j_model').value = c[0].it.id; $('#j_mv').value = c[0].it.mv;
@@ -767,7 +725,7 @@ $('#sq_jp').addEventListener('keydown', e => { if (e.key === 'Enter') $('#sq_go'
 
 // ---------- ブックマークレット ----------
 const BM = {
-  yahoo: `(()=>{const S=(el,ss)=>{for(const s of ss){const x=el.querySelector(s);if(x&&x.innerText&&x.innerText.trim())return x.innerText.trim()}return ''};const items=[];for(const li of document.querySelectorAll('.Product,li.Product,[class*=Product__]>li,li[class*=Product]')){const t=S(li,['.Product__titleLink','.Product__title','a[data-auction-title]','h3']);const p=S(li,['.Product__priceValue','.Product__price','[class*=price]']);const b=S(li,['.Product__bid','[class*=bid]']);const d=S(li,['.Product__time','[class*=time]']);const m=p.replace(/,/g,'').match(/\\d+/);if(m&&t)items.push({t,p:+m[0],b:+((b.match(/\\d+/)||[0])[0]),d})}if(!items.length){const txt=document.body.innerText;const re=/([^\\n]{6,120})\\n[^\\n]*?([\\d,]{3,})円[^\\n]*\\n?[^\\n]*?(\\d+)\\s*入札?/g;let m;while((m=re.exec(txt)))items.push({t:m[1].trim(),p:+m[2].replace(/,/g,''),b:+m[3]})}const cnt=S(document,['.Tab__subText','.SearchMode__title','[class*=Tab__subText]','[class*=resultNum]']);const q=(document.querySelector('#yschsp')||document.querySelector('input[name=p]')||{}).value||'';const out=JSON.stringify({site:'yahoo',q,cnt,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('ヤフオク '+items.length+'件をコピーしました。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
+  yahoo: `(()=>{const items=[];const seen=new Set();for(const a of document.querySelectorAll('a[href*="/jp/auction/"]')){const h=a.href.split('?')[0];if(seen.has(h))continue;let el=a,card=null;for(let i=0;i<8&&el;i++){const t=el.innerText||'';if(/[\\d,]{3,}円/.test(t)&&t.length<700){card=el;break;}el=el.parentElement;}if(!card)continue;seen.add(h);const txt=card.innerText||'';const pm=txt.replace(/,/g,'').match(/(?:落札|現在|即決)\\s*\\n?\\s*(\\d{2,9})円/)||txt.replace(/,/g,'').match(/(\\d{3,9})円/);if(!pm)continue;const img=card.querySelector('img[alt]');const t=(img&&img.alt)||(txt.split('\\n').map(s=>s.trim()).find(s=>s.length>=8&&!/円|送料無料|鑑定付き/.test(s))||'');const bm=txt.match(/円\\n+(\\d+)\\n/);const dm=txt.match(/(\\d{1,2}\\/\\d{1,2}[^\\n]{0,12}終了)/);items.push({t:t.slice(0,120),p:+pm[1],b:bm?+bm[1]:0,d:dm?dm[1]:''});if(items.length>=100)break;}if(!items.length){for(const li of document.querySelectorAll('.Product, li.Product')){const t=(li.querySelector('.Product__titleLink, .Product__title')||{}).innerText||'';const m=((li.querySelector('.Product__priceValue, .Product__price')||{}).innerText||'').replace(/,/g,'').match(/\\d+/);if(m&&t)items.push({t:t.trim(),p:+m[0],b:+(((li.querySelector('.Product__bid')||{}).innerText||'').match(/\\d+/)||[0])[0],d:''})}}const cnt=(document.body.innerText.match(/([\\d,]+)件/)||[])[1]||'';const q=(document.querySelector('input[name=p]')||{}).value||'';const out=JSON.stringify({site:'yahoo',q,cnt,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('ヤフオク '+items.length+'件をコピーしました。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
   mercari: `(()=>{const items=[];for(const li of document.querySelectorAll('li[data-testid="item-cell"],[data-testid="item-cell"]')){const txt=li.innerText||'';const m=txt.replace(/,/g,'').match(/[¥￥]\\s?(\\d+)/);const t=(txt.split('\\n').find(s=>s.trim()&&!/[¥￥]/.test(s))||'').trim();if(m)items.push({t,p:+m[1]})}const q=(document.querySelector('input[type=search]')||document.querySelector('input[name=keyword]')||{}).value||'';const out=JSON.stringify({site:'mercari',q,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('メルカリ '+items.length+'件をコピーしました。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
   ebay: `(()=>{const S=(el,ss)=>{for(const s of ss){const x=el.querySelector(s);if(x&&x.innerText&&x.innerText.trim())return x.innerText.trim()}return ''};const items=[];const cards=document.querySelectorAll('li.s-item,li.s-card,.s-item__wrapper,ul.srp-results>li');for(const li of cards){const t=S(li,['.s-item__title','.s-card__title','[role=heading]','h3']);const p=S(li,['.s-item__price','.s-card__price','[class*=price]']);const d=S(li,['.s-item__caption','.s-item__ended-date','.s-card__caption','[class*=ended]','[class*=caption]']);const m=p.replace(/,/g,'').match(/\\d+(?:\\.\\d{2})?/);if(m&&t&&!/^Shop on eBay/i.test(t))items.push({t,p:parseFloat(m[0]),d})}const cnt=S(document,['.srp-controls__count-heading','[class*=count-heading]']);const q=(document.querySelector('#gh-ac')||{}).value||'';const out=JSON.stringify({site:'ebay',q,cnt,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('eBay '+items.length+'件をコピーしました。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
   yfm: `(()=>{const items=[];const seen=new Set();const sp=/sold=1/.test(location.search);for(const a of document.querySelectorAll('a[href*="/item/"]')){const txt=a.innerText||'';const m=txt.replace(/,/g,'').match(/(\\d+)\\s*円|[¥￥]\\s?(\\d+)/);if(!m||seen.has(a.href))continue;seen.add(a.href);const img=a.querySelector('img[alt]:not([alt="sold"])');const t=(img&&img.alt)||(txt.split('\\n').map(s=>s.trim()).find(s=>s&&!/円|[¥￥]/.test(s)&&!/いいね/.test(s))||'');items.push({t,p:+(m[1]||m[2]),sold:sp||!!a.querySelector('img[alt="sold"]')})}const q=(document.querySelector('input[name=word]')||{}).value||decodeURIComponent((location.pathname.match(/\\/search\\/([^/?]+)/)||[,''])[1]);const out=JSON.stringify({site:'yfm',q,url:location.href,at:new Date().toISOString(),items});const done=()=>alert('Yahoo!フリマ '+items.length+'件をコピーしました（SOLD '+items.filter(i=>i.sold).length+'件）。ツールに貼り付けてください');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(done).catch(()=>prompt('コピーしてください',out))}else prompt('コピーしてください',out)})();`,
@@ -940,6 +898,16 @@ $('#e_search').onclick = () => {
     <div class="hint" style="margin-top:8px">赤枠＝仕入れ候補を探す場所（安い順）。黄枠＝動作品の相場（売ったらいくらになるか）。両方を見比べて、差があるものを①②③で判定。</div>`;
 };
 $('#e_kw').addEventListener('keydown', e => { if (e.key === 'Enter') $('#e_search').click(); });
+// 新着通知の設定（各サイトの公式「保存検索」機能へ誘導）
+$('#n_go').onclick = () => {
+  const kw = $('#n_kw').value.trim(); if (!kw) { $('#n_out').innerHTML = '<div class="ng">型番を入れてください。</div>'; return; }
+  const words = [kw + ' ジャンク', kw + ' 電池切れ', kw + ' 不動'];
+  const L = [];
+  words.forEach(w => L.push(['ya', `ヤフオク「${w}」→ 条件を保存`, `https://auctions.yahoo.co.jp/search/search?p=${enc(w)}&va=${enc(w)}&s1=new&o1=d`]));
+  words.forEach(w => L.push(['me', `メルカリ「${w}」→ 検索条件を保存`, `https://jp.mercari.com/search?keyword=${enc(w)}&status=on_sale&sort=created_time&order=desc`]));
+  $('#n_out').innerHTML = `<div class="links">${L.map(l => `<a class="${l[0]}" href="${l[2]}" target="_blank" rel="noopener">${esc(l[1])}</a>`).join('')}</div>
+    <div class="hint" style="margin-top:6px">開いたページで：ヤフオクは検索結果上部の「条件を保存」→ マイオク「保存した検索条件」で新着通知メールをON。メルカリは検索結果の「検索条件を保存」→ 保存した検索の通知をON（アプリの通知設定も確認）。3語とも登録しておくと取りこぼしが減ります。</div>`;
+};
 $('#e_find1').onclick = () => { $('#f_js').value = '4'; $('#f_cat').value = ''; $('#f_sort').value = 'jroi'; render(); showTab('list'); };
 $('#e_find2').onclick = () => { $('#f_js').value = '0'; $('#f_cat').value = 'gshock'; $('#f_sort').value = 'jroi'; render(); showTab('list'); };
 $('#e_find3').onclick = () => { $('#f_js').value = '3'; $('#f_cat').value = ''; $('#f_q').value = 'ソーラー'; $('#f_sort').value = 'jroi'; render(); showTab('list'); };

@@ -1,0 +1,27 @@
+/* 腕時計せどりナビ 拡張：ページ上のUI（クラスは wsx- で統一） */
+#wsx-btn{position:fixed;right:18px;bottom:18px;z-index:2147483000;background:#d9a847;color:#1b1500;border:none;border-radius:999px;padding:12px 18px;font-size:15px;font-weight:bold;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.35);font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif}
+#wsx-btn:disabled{opacity:.7;cursor:wait}
+#wsx-panel{position:fixed;right:18px;bottom:72px;z-index:2147483000;width:400px;max-width:calc(100vw - 36px);max-height:calc(100vh - 100px);overflow:auto;background:#1b1f29;color:#eef1f6;border:1px solid #323a4b;border-radius:12px;padding:14px;font-size:13px;line-height:1.6;box-shadow:0 8px 30px rgba(0,0,0,.5);font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif}
+#wsx-panel *{box-sizing:border-box}
+#wsx-panel h3{margin:0 0 6px;font-size:14px;color:#d9a847}
+#wsx-panel .wsx-x{position:absolute;top:8px;right:10px;background:none;border:none;color:#8e99ad;font-size:18px;cursor:pointer}
+#wsx-panel .wsx-verdict{font-size:30px;font-weight:bold;line-height:1.2}
+#wsx-panel .ok{color:#2fc38a} #wsx-panel .ng{color:#f0564f} #wsx-panel .wn{color:#f0b42f} #wsx-panel .muted{color:#8e99ad;font-size:12px}
+#wsx-panel .wsx-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+#wsx-panel .wsx-stat{background:#232936;border-radius:8px;padding:6px 8px}
+#wsx-panel .wsx-stat .l{font-size:11px;color:#8e99ad}
+#wsx-panel .wsx-stat .v{font-size:16px;font-weight:bold}
+#wsx-panel .wsx-reason{display:flex;gap:6px;padding:2px 0;border-bottom:1px dashed #323a4b;font-size:12px}
+#wsx-panel .wsx-reason .d{min-width:36px;text-align:right;font-weight:bold}
+#wsx-panel select,#wsx-panel input{background:#232936;color:#eef1f6;border:1px solid #323a4b;border-radius:6px;padding:5px 8px;font-size:13px;max-width:100%}
+#wsx-panel .wsx-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
+#wsx-panel button.wsx-b{background:#d9a847;color:#1b1500;border:none;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:bold;cursor:pointer}
+#wsx-panel button.wsx-b.ghost{background:#232936;border:1px solid #323a4b;color:#eef1f6;font-weight:normal}
+#wsx-panel button.wsx-b.green{background:#2fc38a;color:#06281b}
+#wsx-panel button.wsx-b:disabled{opacity:.6;cursor:wait}
+#wsx-panel a{color:#4f8ef7}
+#wsx-panel .wsx-ai{background:#232936;border-left:3px solid #4f8ef7;padding:8px 10px;border-radius:6px;margin-top:8px}
+#wsx-panel .wsx-ai li{margin-left:16px}
+/* 検索一覧のバッジ */
+.wsx-badge{display:inline-block;margin:4px 0;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:bold;font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;color:#fff;background:#555;line-height:1.5}
+.wsx-badge.ok{background:#1f9d6a} .wsx-badge.ng{background:#c43c36} .wsx-badge.wn{background:#b8860b} .wsx-badge.na{background:#555}

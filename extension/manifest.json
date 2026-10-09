@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "腕時計せどりナビ 拡張",
+  "version": "0.1.0",
+  "description": "ヤフオク・メルカリ・Yahoo!フリマの腕時計ページで、電池交換で直る見込み・相場・買い/見送りを1クリック判定。AI写真判定つき。",
+  "permissions": ["storage", "tabs", "scripting"],
+  "host_permissions": [
+    "https://auctions.yahoo.co.jp/*",
+    "https://page.auctions.yahoo.co.jp/*",
+    "https://jp.mercari.com/*",
+    "https://paypayfleamarket.yahoo.co.jp/*",
+    "https://api.anthropic.com/*"
+  ],
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "腕時計せどりナビ",
+    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://auctions.yahoo.co.jp/jp/auction/*",
+        "https://page.auctions.yahoo.co.jp/jp/auction/*",
+        "https://auctions.yahoo.co.jp/search/*",
+        "https://auctions.yahoo.co.jp/closedsearch/*",
+        "https://auctions.yahoo.co.jp/opensearch*",
+        "https://jp.mercari.com/item/*",
+        "https://jp.mercari.com/shops/product/*",
+        "https://jp.mercari.com/search*",
+        "https://paypayfleamarket.yahoo.co.jp/item/*",
+        "https://paypayfleamarket.yahoo.co.jp/search/*"
+      ],
+      "js": ["data.js", "core.js", "content.js"],
+      "css": ["overlay.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

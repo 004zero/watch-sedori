@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><title>腕時計せどりナビ 拡張 設定</title>
+<style>
+body{background:#12141a;color:#eef1f6;font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;font-size:14px;margin:0;padding:20px;max-width:900px}
+h1{font-size:18px;color:#d9a847}h2{font-size:14px;color:#d9a847;margin:18px 0 8px}
+.card{background:#1b1f29;border:1px solid #323a4b;border-radius:10px;padding:14px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:4px}.field label{font-size:11px;color:#8e99ad}
+input,select{background:#232936;color:#eef1f6;border:1px solid #323a4b;border-radius:6px;padding:8px 10px;font-size:14px}
+input[type=number]{width:110px}
+button{background:#d9a847;color:#1b1500;border:none;border-radius:6px;padding:9px 16px;font-size:14px;font-weight:bold;cursor:pointer}
+button.ghost{background:#232936;border:1px solid #323a4b;color:#eef1f6;font-weight:normal}
+.hint{font-size:12px;color:#8e99ad;line-height:1.6}.ok{color:#2fc38a}.ng{color:#f0564f}
+</style></head><body>
+<h1>⌚ 腕時計せどりナビ 拡張 設定</h1>
+<div class="card">
+  <h2>Claude API（AI写真判定に使用）</h2>
+  <div class="row">
+    <div class="field" style="flex:1;min-width:300px"><label>APIキー（sk-ant-… このブラウザ内にのみ保存）</label><input id="apiKey" type="password" placeholder="sk-ant-api03-..." style="width:100%"></div>
+    <div class="field"><label>モデル</label><select id="model">
+      <option value="claude-opus-5-5">Claude Opus 5.5（標準・精度重視）</option>
+      <option value="claude-sonnet-5-5">Claude Sonnet 5.5（安い）</option>
+      <option value="claude-haiku-5-5">Claude Haiku 5.5（最安）</option>
+    </select></div>
+    <div class="field"><label>思考の深さ</label><select id="effort"><option value="low">low</option><option value="medium" selected>medium</option><option value="high">high</option></select></div>
+    <button class="ghost" id="test">接続テスト</button>
+  </div>
+  <div class="hint" style="margin-top:8px">APIキーは <a href="https://platform.claude.com/" target="_blank" style="color:#4f8ef7">Claude Platform</a> で発行。1回の判定は写真4枚＋説明文で、Opus 5.5 なら数円〜十数円程度。キーはこの拡張の保存領域にだけ置かれ、api.anthropic.com 以外には送られません。<span id="testOut"></span></div>
+</div>
+<div class="card">
+  <h2>手数料・送料（Webツールと同じ考え方）</h2>
+  <div class="row">
+    <div class="field"><label>メルカリ 手数料%</label><input type="number" id="fMer"></div>
+    <div class="field"><label>メルカリ 送料</label><input type="number" id="sMer"></div>
+    <div class="field"><label>ヤフオク 手数料%</label><input type="number" id="fYah"></div>
+    <div class="field"><label>ヤフオク 送料</label><input type="number" id="sYah"></div>
+    <div class="field"><label>Yahoo!フリマ 手数料%</label><input type="number" id="fYfm"></div>
+    <div class="field"><label>Yahoo!フリマ 送料</label><input type="number" id="sYfm"></div>
+    <div class="field"><label>梱包材</label><input type="number" id="pack"></div>
+    <div class="field"><label>Yahoo!フリマ 相場割引%</label><input type="number" id="yfmDisc"></div>
+  </div>
+  <h2>仕入れ時の送料（円）</h2>
+  <div class="row">
+    <div class="field"><label>ヤフオク</label><input type="number" id="bYah"></div>
+    <div class="field"><label>メルカリ</label><input type="number" id="bMer"></div>
+    <div class="field"><label>Yahoo!フリマ</label><input type="number" id="bYfm"></div>
+  </div>
+  <h2>目標利益・キャッシュ</h2>
+  <div class="row">
+    <div class="field"><label>目標利益率（手取り比%）</label><input type="number" id="tgtPct"></div>
+    <div class="field"><label>最低利益額（円）</label><input type="number" id="tgtMin"></div>
+    <div class="field"><label>相場キャッシュ（時間）</label><input type="number" id="cacheHours"></div>
+  </div>
+  <h2>復活・修理コスト（円）</h2>
+  <div class="row" id="fix"></div>
+  <div class="row" style="margin-top:14px"><button id="save">保存</button><button class="ghost" id="reset">初期値に戻す</button><span id="msg" class="hint"></span></div>
+</div>
+<script src="data.js"></script>
+<script src="options.js"></script>
+</body></html>

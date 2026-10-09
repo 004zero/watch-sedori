@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><title>腕時計せどりナビ</title>
+<style>
+body{width:560px;background:#12141a;color:#eef1f6;font-family:"Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;font-size:13px;margin:0;padding:12px}
+h1{font-size:15px;color:#d9a847;margin:0 0 8px}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+button{background:#d9a847;color:#1b1500;border:none;border-radius:6px;padding:6px 10px;font-size:12px;font-weight:bold;cursor:pointer}
+button.ghost{background:#232936;border:1px solid #323a4b;color:#eef1f6;font-weight:normal}
+table{border-collapse:collapse;width:100%;font-size:12px}th,td{border-bottom:1px solid #323a4b;padding:4px 5px;text-align:left;vertical-align:top}th{color:#8e99ad;font-weight:normal}
+a{color:#4f8ef7;text-decoration:none}.ok{color:#2fc38a}.ng{color:#f0564f}.wn{color:#f0b42f}.muted{color:#8e99ad}
+.hint{font-size:11px;color:#8e99ad;line-height:1.5;margin-top:8px}
+</style></head><body>
+<h1>⌚ 腕時計せどりナビ</h1>
+<div class="row">
+  <button id="opt">⚙ 設定（APIキー・手数料）</button>
+  <button class="ghost" id="tool">Webツールを開く</button>
+  <button class="ghost" id="csv">候補をCSV出力</button>
+  <button class="ghost" id="cache">相場キャッシュ削除</button>
+  <button class="ghost" id="clear">候補を全削除</button>
+</div>
+<div id="list"></div>
+<div class="hint">使い方：ヤフオク・メルカリ・Yahoo!フリマの商品ページ右下「⌚ 判定」／検索結果ページ右下「⌚ 一覧を判定」。相場は裏タブで自動取得（24時間キャッシュ）。AI写真判定は設定でAPIキーを登録すると使えます。</div>
+<script src="popup.js"></script>
+</body></html>
