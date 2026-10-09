@@ -118,6 +118,16 @@
   </div>
   <div id="e_out"></div>
   <div class="card">
+    <h2>商品を探す</h2>
+    <div class="row">
+      <div class="field" style="flex:1;min-width:220px"><label>探したいモデル・ブランド（型番が一番よく効きます）</label><input id="e_kw" placeholder="例：G-SHOCK DW-5600 ／ セイコー 8F32 ／ アテッサ" style="width:100%;font-size:16px"></div>
+      <button class="btn" id="e_search">検索リンクを出す</button>
+    </div>
+    <div class="hint" style="margin-top:6px">よく使う言葉（クリックで入力）：<span id="e_presets"></span></div>
+    <div id="e_search_out" style="margin-top:10px"></div>
+    <div class="hint" style="margin-top:8px">見つけた出品のタイトル＋説明をコピーして、上の①②③で判定します。</div>
+  </div>
+  <div class="card">
     <h2>何を探せばいいか分からないとき</h2>
     <div class="row">
       <button class="btn ghost" id="e_find1">電池交換で直りやすい・安く買えるモデルを見る</button>
@@ -908,6 +918,28 @@ $('#e_go').onclick = () => {
   $('#e_detail').onclick = () => showTab('junk');
 };
 $('#e_text').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) $('#e_go').click(); });
+const E_PRESETS = ['G-SHOCK DW-5600', 'G-SHOCK 電波ソーラー', 'セイコー 8F32', 'セイコー ソーラー', 'アテッサ', 'エコドライブ', 'オシアナス', 'タグホイヤー クォーツ', 'グッチ 腕時計', '腕時計 まとめ', '腕時計 電池切れ'];
+$('#e_presets').innerHTML = E_PRESETS.map(p => `<button class="btn ghost small" data-kw="${esc(p)}" style="margin:2px">${esc(p)}</button>`).join('');
+$('#e_presets').querySelectorAll('button').forEach(b => b.onclick = () => { $('#e_kw').value = b.dataset.kw; $('#e_search').click(); });
+$('#e_search').onclick = () => {
+  const kw = $('#e_kw').value.trim(); if (!kw) { $('#e_search_out').innerHTML = '<div class="ng">探したい言葉を入れてください。</div>'; return; }
+  const jk = /ジャンク|電池切れ|不動/.test(kw) ? kw : kw + ' ジャンク';
+  const L = [
+    ['ya', 'ヤフオク：ジャンクを安い順', `https://auctions.yahoo.co.jp/search/search?p=${enc(jk)}&va=${enc(jk)}&s1=cbids&o1=a`],
+    ['ya', 'ヤフオク：「電池切れ」で検索', `https://auctions.yahoo.co.jp/search/search?p=${enc(kw + ' 電池切れ')}&va=${enc(kw + ' 電池切れ')}&s1=cbids&o1=a`],
+    ['ya', 'ヤフオク：終了が近い順', `https://auctions.yahoo.co.jp/search/search?p=${enc(jk)}&va=${enc(jk)}&s1=end&o1=a`],
+    ['me', 'メルカリ：ジャンクを安い順', `https://jp.mercari.com/search?keyword=${enc(jk)}&status=on_sale&sort=price&order=asc`],
+    ['me', 'メルカリ：「電池切れ」で検索', `https://jp.mercari.com/search?keyword=${enc(kw + ' 電池切れ')}&status=on_sale&sort=price&order=asc`],
+    ['me', 'Yahoo!フリマ：出品中', `https://paypayfleamarket.yahoo.co.jp/search/${enc(jk)}`],
+    ['st', 'ハードオフ ネットモール', `https://netmall.hardoff.co.jp/search/?q=${enc(kw)}`],
+    ['st', 'セカストオンライン', `https://www.2ndstreet.jp/search?keyword=${enc(kw)}`],
+    ['gd', '相場を見る：ヤフオク落札（動作品がいくらで売れたか）', `https://auctions.yahoo.co.jp/closedsearch/closedsearch?p=${enc(kw)}&va=${enc(kw)}&exflg=1&b=1&n=50&s1=end&o1=d`],
+    ['gd', '相場を見る：メルカリ売切', `https://jp.mercari.com/search?keyword=${enc(kw)}&status=sold_out`],
+  ];
+  $('#e_search_out').innerHTML = `<div class="links">${L.map(l => `<a class="${l[0]}" href="${l[2]}" target="_blank" rel="noopener">${l[1]}</a>`).join('')}</div>
+    <div class="hint" style="margin-top:8px">赤枠＝仕入れ候補を探す場所（安い順）。黄枠＝動作品の相場（売ったらいくらになるか）。両方を見比べて、差があるものを①②③で判定。</div>`;
+};
+$('#e_kw').addEventListener('keydown', e => { if (e.key === 'Enter') $('#e_search').click(); });
 $('#e_find1').onclick = () => { $('#f_js').value = '4'; $('#f_cat').value = ''; $('#f_sort').value = 'jroi'; render(); showTab('list'); };
 $('#e_find2').onclick = () => { $('#f_js').value = '0'; $('#f_cat').value = 'gshock'; $('#f_sort').value = 'jroi'; render(); showTab('list'); };
 $('#e_find3').onclick = () => { $('#f_js').value = '3'; $('#f_cat').value = ''; $('#f_q').value = 'ソーラー'; $('#f_sort').value = 'jroi'; render(); showTab('list'); };
