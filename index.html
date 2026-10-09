@@ -36,6 +36,7 @@
   button.btn.ghost{background:var(--panel2);border:1px solid var(--border);color:var(--text);font-weight:normal}
   button.btn.small{padding:4px 10px;font-size:12px}
   button.btn.danger{background:var(--bad);color:#fff}
+  a.btn{display:inline-block;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:9px 16px;font-size:14px}
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
   .stat{background:var(--panel2);border-radius:8px;padding:10px;text-align:center}
   .stat .v{font-size:20px;font-weight:bold;margin-top:2px}
@@ -84,7 +85,8 @@
   <h1>⌚ 腕時計せどりナビ <span class="badge">ジャンク復活 × 販路ルート</span></h1>
   <div class="sub">「電池交換すれば動く」ジャンクの見極めと、ヤフオク／メルカリ／セカスト／ハードオフ／eBay の仕入れ→販売ルートで差額が取れる組み合わせを判定します。相場は目安、実データは取り込みで上書き。</div>
   <nav>
-    <button data-tab="list" class="on">📋 モデル相場・ルート</button>
+    <button data-tab="easy" class="on">🚀 かんたん判定</button>
+    <button data-tab="list">📋 モデル相場・ルート</button>
     <button data-tab="junk">🔋 ジャンク判定</button>
     <button data-tab="route">🔀 ルート計算</button>
     <button data-tab="import">📥 実データ取り込み</button>
@@ -96,7 +98,47 @@
 <main>
 
 <!-- ========== モデル一覧 ========== -->
-<section id="tab-list" class="on">
+<section id="tab-easy" class="on">
+  <div class="card">
+    <h2>このツールでできること</h2>
+    <div class="note">ヤフオク・メルカリ・リサイクル店で見つけた腕時計を「<b>買っていいか／いくらまでなら買っていいか</b>」を数字で判定します。特に「電池切れ・不動」で安く出ているジャンクが、電池交換だけで動く可能性が高いかどうかを見ます。<br>やることは3つだけ：<b>① 出品文を貼る → ② 価格を入れる → ③ 判定ボタンを押す</b></div>
+  </div>
+  <div class="card">
+    <h2>① 出品ページの「タイトル＋商品説明」をコピーして、ここに貼る</h2>
+    <textarea id="e_text" rows="6" style="width:100%" placeholder="例：SEIKO セイコー 8F32-0040 パーペチュアルカレンダー チタン 電池切れのため動作未確認 ジャンク扱い 長期自宅保管品 箱あり"></textarea>
+    <div class="hint" style="margin-top:6px">ヤフオク・メルカリ・Yahoo!フリマどれでもOK。型番（DW-5600、8F32 など）が入っているとモデルを自動で当てます。店頭の値札なら、ブランド名・型番・値札の文言（「電池切れ」など）を自分で打ち込んでください。</div>
+  </div>
+  <div class="card">
+    <h2>② いくらで買えそうか</h2>
+    <div class="row">
+      <div class="field"><label>価格（円）落札しそうな額・値札の額</label><input type="number" id="e_price" value="3000" style="width:140px;font-size:18px"></div>
+      <div class="field"><label>どこで買う？</label><select id="e_src" style="font-size:16px"></select></div>
+      <button class="btn" id="e_go" style="font-size:18px;padding:12px 28px">③ 買っていいか判定</button>
+    </div>
+  </div>
+  <div id="e_out"></div>
+  <div class="card">
+    <h2>何を探せばいいか分からないとき</h2>
+    <div class="row">
+      <button class="btn ghost" id="e_find1">電池交換で直りやすい・安く買えるモデルを見る</button>
+      <button class="btn ghost" id="e_find2">G-SHOCK だけ見る</button>
+      <button class="btn ghost" id="e_find3">セイコー・シチズンのソーラー/電波を見る</button>
+    </div>
+    <div class="hint" style="margin-top:8px">一覧でモデル名をクリック →「ヤフオク ジャンク出品中（安い順）」のリンクを押すと、そのモデルのジャンクが安い順に並びます。気になる出品があったら、この画面に戻って①②③。</div>
+  </div>
+  <div class="card">
+    <h2>流れのまとめ</h2>
+    <ol class="list">
+      <li><b>探す</b>：ヤフオク／メルカリで「モデル名 ジャンク」や「電池切れ」で検索（上の一覧のリンクでも可）</li>
+      <li><b>判定する</b>：出品文を貼って価格を入れる → 「買い」なら入札・購入。「仕入上限」より高くなったら降りる</li>
+      <li><b>直す</b>：届いたら裏蓋を開けて電池交換（📖ガイドに電池型番と工具）。ソーラーは窓際で2〜3日充電</li>
+      <li><b>売る</b>：動いたら判定結果の「一番手取りが大きい販売先」に出品。出品文は📖ガイドのテンプレ</li>
+      <li><b>記録する</b>：判定結果の「候補に保存」で📝仕入れ候補に残し、売れたら売却済みにする</li>
+    </ol>
+  </div>
+</section>
+
+<section id="tab-list">
   <div class="card">
     <div class="row">
       <div class="field"><label>キーワード</label><input id="f_q" placeholder="DW-5600 / アテッサ / Tag Heuer" style="width:220px"></div>
@@ -822,7 +864,53 @@ document.querySelectorAll('nav button').forEach(b => b.onclick = () => showTab(b
 fillSelect('#f_cat', Object.entries(CATS), 'すべて');
 fillSelect('#f_mv', Object.entries(MV).map(([k, v]) => [k, v[0]]), 'すべて');
 fillSelect('#j_mv', Object.entries(MV).map(([k, v]) => [k, v[0]]));
-fillSelect('#j_src', SRC.map(s => [s.id, s.n])); fillSelect('#r_src', SRC.map(s => [s.id, s.n])); fillSelect('#c_src', SRC.map(s => [s.id, s.n]));
+fillSelect('#j_src', SRC.map(s => [s.id, s.n])); fillSelect('#r_src', SRC.map(s => [s.id, s.n])); fillSelect('#c_src', SRC.map(s => [s.id, s.n])); fillSelect('#e_src', SRC.map(s => [s.id, s.n]));
+
+// ---------- かんたん判定 ----------
+$('#e_go').onclick = () => {
+  const text = $('#e_text').value.trim();
+  if (!text) { $('#e_out').innerHTML = '<div class="card"><div class="ng">①に出品文（最低でもブランド名と型番）を貼ってください。</div></div>'; return; }
+  // ジャンク判定タブに同じ内容を流し込んで計算
+  $('#j_text').value = text; $('#j_price').value = $('#e_price').value; $('#j_src').value = $('#e_src').value;
+  const s = SRC.find(x => x.id === $('#e_src').value); $('#j_ship').value = SET[s.ship]; $('#j_sale').value = '';
+  const cands = detectModel(text);
+  $('#j_model').value = cands.length ? cands[0].it.id : ''; $('#j_mv').value = cands.length ? cands[0].it.mv : 'QZ';
+  $('#j_go').click();
+  const L = lastJudge; const it = L.it; const jd = L.jd; const J = L.J;
+  const lvl = jd.score >= 65 ? ['高い', 'ok'] : jd.score >= 40 ? ['五分五分', 'wn'] : ['低い', 'ng'];
+  let verdict, cls, why;
+  if (!it) { verdict = 'モデルが分からず金額は計算できません'; cls = 'wn'; why = 'ブランド名と型番を貼り付け文に足すか、「🔋 ジャンク判定」タブでモデルを手で選んでください。復活確率だけは下に出ています。'; }
+  else if (jd.score < 25) { verdict = '見送り'; cls = 'ng'; why = '電池交換では直らない可能性が高い文言があります（下の根拠を参照）。'; }
+  else if (L.price + L.ship <= J.maxBuy) { verdict = '買い'; cls = 'ok'; why = `送料込み ${yen(J.maxBuy)} までなら目標利益（${yen(J.target)}）を確保できます。`; }
+  else if (J.ev > 0) { verdict = '値下げ待ち'; cls = 'wn'; why = `利益は出ますが目標に届きません。送料込み ${yen(J.maxBuy)} 以下になったら買い。`; }
+  else { verdict = '見送り'; cls = 'ng'; why = 'この価格だと期待利益がマイナスです。'; }
+  const reasons = jd.reasons.filter(r => r.d !== 0).slice(0, 6);
+  $('#e_out').innerHTML = `<div class="card" style="border-color:var(--accent)">
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div class="${cls}" style="font-size:40px;font-weight:bold">${verdict}</div>
+      <div class="muted">${esc(why)}</div>
+    </div>
+    ${it ? `<div class="muted" style="margin-top:6px">モデル：<b>${esc(it.brand + ' ' + it.name)}</b>（違うモデルなら「🔋 ジャンク判定」タブのプルダウンで選び直してください）</div>` : ''}
+    <div class="stats" style="margin-top:12px">
+      <div class="stat"><div class="l">電池交換などで動く見込み</div><div class="v ${lvl[1]}">${jd.score}%<div class="muted">${lvl[0]}</div></div></div>
+      ${it ? `<div class="stat"><div class="l">いくらまでなら買っていい（送料込）</div><div class="v">${yen(J.maxBuy)}</div></div>
+      <div class="stat"><div class="l">動いたらどこで売る</div><div class="v" style="font-size:15px">${esc(J.bestDstN)}<div class="muted">手取り ${yen(J.bestNet)}</div></div></div>
+      <div class="stat"><div class="l">この価格で買った時の期待利益</div><div class="v ${J.ev > 0 ? 'ok' : 'ng'}">${yen(J.ev)}</div></div>
+      <div class="stat"><div class="l">直すのにかかる費用</div><div class="v" style="font-size:15px">${yen(J.cheap)}<div class="muted">${esc(FIXCOST[L.mv][1])}</div></div></div>` : ''}
+    </div>
+    ${reasons.length ? `<div style="margin-top:12px"><b>判定の根拠</b>${reasons.map(r => `<div class="reason"><span class="d ${r.d > 0 ? 'ok' : 'ng'}">${r.d > 0 ? '+' : ''}${r.d}</span><span>${esc(r.label)}</span></div>`).join('')}</div>` : ''}
+    <div class="row" style="margin-top:12px">
+      ${it ? '<button class="btn green" id="e_save">仕入れ候補に保存</button>' : ''}
+      <button class="btn ghost" id="e_detail">詳しい内訳を見る（🔋 ジャンク判定タブ）</button>
+      ${it ? `<a class="btn ghost" style="text-decoration:none" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${enc(it.kj + ' 電池交換')}">電池交換の動画を見る</a>` : ''}
+    </div></div>`;
+  const sv = $('#e_save'); if (sv) sv.onclick = () => $('#j_save').click();
+  $('#e_detail').onclick = () => showTab('junk');
+};
+$('#e_text').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) $('#e_go').click(); });
+$('#e_find1').onclick = () => { $('#f_js').value = '4'; $('#f_cat').value = ''; $('#f_sort').value = 'jroi'; render(); showTab('list'); };
+$('#e_find2').onclick = () => { $('#f_js').value = '0'; $('#f_cat').value = 'gshock'; $('#f_sort').value = 'jroi'; render(); showTab('list'); };
+$('#e_find3').onclick = () => { $('#f_js').value = '3'; $('#f_cat').value = ''; $('#f_q').value = 'ソーラー'; $('#f_sort').value = 'jroi'; render(); showTab('list'); };
 fillSelect('#j_model', modelOptions(), '（未特定・ムーブメントだけで判定）'); fillSelect('#r_model', modelOptions(), '（手入力）'); fillSelect('#r_map_model', modelOptions()); fillSelect('#paste_item', modelOptions(), '（紐づけない）'); fillSelect('#c_model', modelOptions(), '（未特定）');
 ['#f_q', '#f_cat', '#f_mv', '#f_js', '#f_sort', '#f_pos'].forEach(s => $(s).addEventListener('input', render));
 buildFixInputs(); loadSet(); render(); renderReal(); renderCand(); renderMap(); fillRouteFromModel();
